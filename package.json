@@ -1,0 +1,14 @@
+{
+    "name": "StreamlessX",
+    "version": "1.0.0",
+    "description": "A front-end dApp for exploring new music",
+    "scripts": {
+      "dev": "live-server --port=3000",
+      "start": "live-server --port=3000"
+    },
+    "dependencies": {},
+    "devDependencies": {
+      "live-server": "^1.2.1"
+    }
+  }
+  
