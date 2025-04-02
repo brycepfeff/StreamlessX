@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Streamless Music DApp</title>
+  <title>Streamless Music - Explore</title>
   <style>
     /* Global Styles */
     body {
@@ -13,77 +13,208 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       color: #000;
     }
-    header {
-      padding: 20px;
-      text-align: center;
-      background-color: transparent;
+    /* Navbar Styles */
+    .navbar {
+      background-color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
+    .navbar .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .navbar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    .navbar ul li {
+      margin-left: 20px;
+    }
+    .navbar ul li a {
+      text-decoration: none;
+      color: #000;
+      font-weight: 500;
+    }
+    /* Container */
     .container {
       max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
+      margin: 20px auto;
+      padding: 0 20px;
     }
-    h1, h2, h3 {
+    /* Explore Section */
+    .explore-header {
+      margin-bottom: 20px;
+    }
+    .explore-header h1 {
+      margin: 0;
+      font-size: 32px;
       font-weight: 600;
     }
-    /* Card style to create a clean section look */
-    .card {
-      background: #fff;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      background-color: #000;
-      color: #fff;
+    .explore-header p {
+      margin: 5px 0 0;
       font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      color: #555;
     }
-    button:hover {
-      background-color: #333;
+    .explore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
-    footer {
-      text-align: center;
-      padding: 20px;
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .card-content {
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-content h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+    .card-content p {
+      margin: 5px 0;
       font-size: 14px;
-      color: #666;
+      color: #555;
+    }
+    .stats {
+      margin-top: auto;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+      font-size: 13px;
+      color: #333;
+    }
+    .stats span {
+      display: block;
+      margin-bottom: 5px;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+      }
+      .navbar ul {
+        flex-direction: column;
+        margin-top: 10px;
+      }
+      .navbar ul li {
+        margin-left: 0;
+        margin-bottom: 10px;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Streamless Music DApp</h1>
-  </header>
+  <nav class="navbar">
+    <div class="logo">Streamless Music</div>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Explore</a></li>
+      <li><a href="#">Library</a></li>
+      <li><a href="#">Wallet</a></li>
+    </ul>
+  </nav>
   <div class="container">
-    <section class="card">
-      <h2>Welcome</h2>
-      <p>
-        Experience music like never before with a seamless, minimalistic interface that feels like an Apple store exhibit.
-      </p>
-      <button id="connectWallet">Connect Wallet</button>
-    </section>
-    <section class="card">
-      <h2>Features</h2>
-      <ul>
-        <li>Clean and minimal design</li>
-        <li>Fast and secure transactions</li>
-        <li>User-friendly interface</li>
-      </ul>
+    <header class="explore-header">
+      <h1>Explore New Music</h1>
+      <p>Discover emerging tracks and artists ranked by their market cap and trading volume.</p>
+    </header>
+    <section class="explore-grid">
+      <!-- Card 1 -->
+      <div class="card">
+        <img src="https://via.placeholder.com/280x160.png?text=Infinite+Beats" alt="Infinite Beats" />
+        <div class="card-content">
+          <h2>Infinite Beats</h2>
+          <p>Artist: Aurora</p>
+          <div class="stats">
+            <span>Market Cap: $1.2B</span>
+            <span>Trading Volume: $150M</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="card">
+        <img src="https://via.placeholder.com/280x160.png?text=Midnight+Rave" alt="Midnight Rave" />
+        <div class="card-content">
+          <h2>Midnight Rave</h2>
+          <p>Artist: Lunar</p>
+          <div class="stats">
+            <span>Market Cap: $900M</span>
+            <span>Trading Volume: $120M</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="card">
+        <img src="https://via.placeholder.com/280x160.png?text=Sunrise+Symphony" alt="Sunrise Symphony" />
+        <div class="card-content">
+          <h2>Sunrise Symphony</h2>
+          <p>Artist: Eclipse</p>
+          <div class="stats">
+            <span>Market Cap: $750M</span>
+            <span>Trading Volume: $95M</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="card">
+        <img src="https://via.placeholder.com/280x160.png?text=Neon+Dreams" alt="Neon Dreams" />
+        <div class="card-content">
+          <h2>Neon Dreams</h2>
+          <p>Artist: PixelWave</p>
+          <div class="stats">
+            <span>Market Cap: $600M</span>
+            <span>Trading Volume: $80M</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="card">
+        <img src="https://via.placeholder.com/280x160.png?text=Digital+Pulse" alt="Digital Pulse" />
+        <div class="card-content">
+          <h2>Digital Pulse</h2>
+          <p>Artist: CyberSoul</p>
+          <div class="stats">
+            <span>Market Cap: $450M</span>
+            <span>Trading Volume: $65M</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="card">
+        <img src="https://via.placeholder.com/280x160.png?text=Echoes+of+Tomorrow" alt="Echoes of Tomorrow" />
+        <div class="card-content">
+          <h2>Echoes of Tomorrow</h2>
+          <p>Artist: Nova</p>
+          <div class="stats">
+            <span>Market Cap: $300M</span>
+            <span>Trading Volume: $50M</span>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
-  <footer>
-    <p>&copy; 2025 Streamless Music. All rights reserved.</p>
-  </footer>
   <script>
-    // Placeholder for dApp functionality
-    document.getElementById('connectWallet').addEventListener('click', function () {
-      alert('Connect wallet functionality coming soon.');
-    });
+    // Placeholder for future dApp functionality and interactions
   </script>
 </body>
 </html>
