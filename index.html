@@ -4,67 +4,49 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Streamless - Explore</title>
-  <!-- Importing the Manrope font -->
+  <!-- Favicon and Logo -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!-- Import Manrope font -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" rel="stylesheet">
-  <!-- Chart.js CDN (for price charts) -->
+  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Global Reset and Base Styles */
+    /* Global Reset */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: #e6e6e6;
-      font-family: 'Manrope', sans-serif;
-      color: #000;
-      display: flex;
-      min-height: 100vh;
-    }
-    /* Overall Layout */
+    body { background-color: #e6e6e6; font-family: 'Manrope', sans-serif; color: #000; display: flex; min-height: 100vh; }
     .container { display: flex; width: 100%; }
     /* Sidebar */
     .sidebar {
-      width: 240px;
-      background-color: #fff;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+      width: 240px; background-color: #fff; padding: 20px;
+      display: flex; flex-direction: column; box-shadow: 2px 0 4px rgba(0,0,0,0.1);
       position: fixed; top: 0; bottom: 0; left: 0;
     }
-    .sidebar .logo { font-size: 24px; font-weight: 600; margin-bottom: 40px; cursor: pointer; }
+    .nav-links li a { padding-left: 10px; }
+    .logo { width: 200px; margin-bottom: 40px; cursor: pointer; }
     .nav-links { list-style: none; flex-grow: 1; }
     .nav-links li { margin-bottom: 20px; }
     .nav-links li a { text-decoration: none; color: #000; font-weight: 500; font-size: 16px; cursor: pointer; }
-    /* Main Content */
-    .main {
-      margin-left: 240px;
-      width: calc(100% - 240px);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    /* Top Player Bar with Apple Music style icons */
+    /* Main content */
+    .main { margin-left: 240px; width: calc(100% - 240px); display: flex; flex-direction: column; min-height: 100vh; }
+    /* Top Player Bar */
     .top-player {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #fff;
-      padding: 15px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: space-between;
+      background-color: #fff; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      min-height: 60px;
     }
     .player-info { flex: 1; }
     .play-controls { flex: 1; text-align: center; }
     .account-info { flex: 1; text-align: right; }
     .player-details h3 { font-size: 18px; margin-bottom: 5px; }
     .player-details p { font-size: 14px; color: #555; }
-    /* Using Apple Music–like Unicode icons */
-    .play-controls button { font-size: 24px; margin: 0 10px; background: none; border: none; cursor: pointer; }
-    /* Using ⏮ (&#9198;), ▶ (&#9654;), ⏭ (&#9197;) */
-    .account-info button { font-size: 16px; background: none; border: none; cursor: pointer; }
+    .play-controls button, .account-info button { background: none; border: none; cursor: pointer; }
+    .play-controls button { font-size: 24px; margin: 0 10px; min-width: 40px; }
+    .account-info button { font-size: 16px; }
     .account-info img { border-radius: 50%; width: 32px; height: 32px; vertical-align: middle; margin-right: 8px; }
-    /* Content Sections */
+    /* Content Sections (unique IDs) */
     .content-section { padding: 20px; flex-grow: 1; overflow-y: auto; display: none; }
     .content-section.active { display: block; }
-    /* Explore (acts as Home) */
+    /* Explore Section */
     #explore { padding-top: 20px; }
     .explore-header h1 { font-size: 32px; font-weight: 600; margin-bottom: 10px; text-align: center; }
     .explore-header p { font-size: 16px; color: #555; text-align: center; margin-bottom: 20px; }
@@ -73,65 +55,41 @@
       background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       display: flex; flex-direction: column; padding: 15px; cursor: pointer;
     }
-    .card-content h2 { margin: 0 0 10px; font-size: 20px; font-weight: 600; }
-    .card-content p { margin: 5px 0; font-size: 14px; color: #555; }
+    .card-content h2 { margin-bottom: 10px; font-size: 20px; font-weight: 600; }
+    .card-content p { font-size: 14px; color: #555; margin: 5px 0; }
     .stats { margin-top: auto; border-top: 1px solid #eee; padding-top: 10px; font-size: 13px; color: #333; }
     .stats span { display: block; margin-bottom: 5px; }
-    /* Recommended Section in Explore */
-    .recommended {
-      max-width: 600px; margin: 40px auto 0; padding: 15px;
-      background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+    /* Recommended Section */
+    .recommended { max-width: 600px; margin: 40px auto 0; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
     .recommended h2 { font-size: 22px; margin-bottom: 10px; }
     .recommendation-card { cursor: pointer; }
-    .recommendation-card h3 {
-      font-size: 20px; margin-bottom: 5px; position: relative;
-    }
+    .recommendation-card h3 { font-size: 20px; margin-bottom: 5px; position: relative; }
     .recommendation-card h3 .ticket-price-label {
-      background-color: #1DA1F2; color: #fff; padding: 4px 8px;
-      border-radius: 8px; font-size: 14px; position: absolute; right: 0; top: 0;
+      background-color: #1DA1F2; color: #fff; padding: 4px 8px; border-radius: 8px; font-size: 14px;
+      position: absolute; right: 0; top: 0;
     }
-    /* Library Page (Playback-Focused: no action buttons) */
+    /* Library Section */
     #library h1 { text-align: center; margin-bottom: 20px; }
-    .library-section {
-      max-width: 600px; margin: 0 auto 20px; background-color: #fff;
-      padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .library-section h2 { font-size: 20px; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+    .library-section { max-width: 600px; margin: 0 auto 20px; background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .library-section h2 { font-size: 20px; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; text-align: center; }
     .library-section ul { list-style: none; padding: 0; }
-    .library-section li {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 5px 0; border-bottom: 1px solid #eee; cursor: pointer;
-    }
+    .library-section li { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
     .library-section li:last-child { border-bottom: none; }
     .item-name { flex: 2; }
     .item-price { flex: 1; text-align: right; }
-    #createPlaylistBtn {
-      display: block; margin: 10px auto; padding: 8px 16px;
-      border: 1px solid #ccc; border-radius: 20px; background-color: #fff;
-      cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    /* Portfolio Page (with action buttons) */
+    #createPlaylistBtn { display: block; margin: 10px auto; padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; background-color: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    /* Portfolio Section */
     #portfolio h1 { text-align: center; margin-bottom: 20px; }
     .portfolio-value { text-align: center; margin-bottom: 30px; }
     .portfolio-value h2 { font-size: 32px; margin: 10px 0; color: #000; }
-    .portfolio-section {
-      max-width: 600px; margin: 0 auto 20px; background-color: #fff;
-      padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .portfolio-section h3 { font-size: 20px; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+    .portfolio-section { max-width: 600px; margin: 0 auto 20px; background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .portfolio-section h3 { font-size: 20px; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; text-align: center; }
     .portfolio-section ul { list-style: none; padding: 0; }
-    .portfolio-section li {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 5px 0; border-bottom: 1px solid #eee; cursor: pointer;
-    }
+    .portfolio-section li { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
     .portfolio-section li:last-child { border-bottom: none; }
     .item-actions { flex: 1; text-align: center; }
-    .item-actions button {
-      margin: 0 2px; padding: 4px 8px; background-color: #1DA1F2; color: #fff;
-      border: none; border-radius: 4px; font-size: 12px; cursor: pointer;
-    }
-    /* Events Page */
+    .item-actions button { margin: 0 2px; padding: 4px 8px; background-color: #1DA1F2; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; width: 60px; text-align: center; }
+    /* Events Section */
     #events h1 { text-align: center; margin-bottom: 10px; }
     .event-list { max-width: 600px; margin: 0 auto 20px; }
     .event-list ul { list-style: none; padding: 0; margin: 0; }
@@ -141,58 +99,58 @@
       border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .event-item .event-info { display: flex; justify-content: space-between; width: 100%; }
-    .event-title { font-size: 16px; font-weight: 600; }
-    .event-seats-info {
-      background-color: #1DA1F2; color: #fff; padding: 4px 8px;
-      border-radius: 8px; font-size: 14px;
-    }
-    /* Event Details (Seating Layout) */
+    .event-seats-info { background-color: #1DA1F2; color: #fff; padding: 4px 8px; border-radius: 8px; font-size: 14px; }
     .event-details { max-width: 600px; margin: 0 auto; display: none; }
-    .stage {
-      max-width: 600px; margin: 0 auto 20px; text-align: center;
-      font-weight: bold; padding: 10px; background-color: #ccc;
-      border-radius: 10px;
-    }
-    .theater {
-      display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px;
-      max-width: 600px; margin: 0 auto 20px;
-    }
-    /* Seat styles with manual data-price attributes per row */
+    /* Theater Seats in Events */
+    .theater { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 10px; }
     .seat { background-color: #4CAF50; color: #fff; padding: 10px; text-align: center; cursor: pointer; border-radius: 4px; user-select: none; }
     .seat.unavailable { background-color: #ccc; cursor: not-allowed; }
     .seat.selected { background-color: #2196F3; }
-    .checkout-summary { text-align: center; margin-top: 20px; }
     #totalPrice { font-size: 18px; margin-right: 10px; }
-    .checkout-btn {
-      padding: 10px 20px; font-size: 16px; border: none;
-      border-radius: 20px; background-color: #000; color: #fff;
-      cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+    .checkout-btn { padding: 10px 20px; font-size: 16px; border: none; border-radius: 20px; background-color: #000; color: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .checkout-btn:hover { background-color: #333; }
+    /* Venue Creator Modal – unique layout */
+    #venueCreatorModal .modal-content { max-width: 800px; }
+    #venueCreatorContent { margin-bottom: 20px; }
+    #venueCreatorContent label { margin-right: 5px; font-weight: 500; }
+    #venueCreatorContent input { margin-right: 10px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; }
+    /* Row 1: Grid Rows & Columns, Create Grid and Start Over */
+    #venueCreatorContent > div:first-child {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    /* Row 2: GA Limit and Mint Price */
+    #venueCreatorContent > div:nth-child(2) {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    /* Row 3: Toolbar */
+    #toolbar { text-align: center; margin-bottom:10px; }
+    #toolbar button {
+      margin-right: 5px; padding: 5px 10px; border: none;
+      background-color: #007aff; color: #fff; border-radius: 5px;
+      cursor: pointer; font-size: 14px;
+    }
+    #toolbar button:hover { background-color: #0051a8; }
+    #venueGridContainer { margin-top: 10px; }
+    #venueGridContainer table { width: 100%; border-collapse: collapse; }
+    #venueGridContainer td {
+      border: 1px solid #ccc; width: 40px; height: 40px;
+      text-align: center; vertical-align: middle; cursor: pointer;
+    }
+    .venue-buttons { text-align: center; margin-top: 10px; }
+    .venue-buttons button { width: 30%; padding: 10px; margin: 0 2%; border-radius: 5px; }
     /* Modal Styles */
-    .modal {
-      display: none; position: fixed; z-index: 2000;
-      left: 0; top: 0; width: 100%; height: 100%;
-      overflow: auto; background-color: rgba(0,0,0,0.7);
-    }
-    .modal-content {
-      background-color: #fff; margin: 10% auto;
-      padding: 20px; border-radius: 8px; max-width: 600px;
-      position: relative;
-    }
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }
+    .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 8px; max-width: 600px; position: relative; }
     .close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
     /* Sell Ticket Modal */
     #sellTicketModal .modal-content { max-width: 400px; }
     /* Playlist Modal */
     #playlistModal .modal-content { max-width: 400px; }
-    /* Responsive */
     @media (max-width: 768px) {
-      .sidebar {
-        position: relative; width: 100%; height: auto;
-        flex-direction: row; align-items: center; justify-content: space-between;
-        padding: 10px 20px; box-shadow: none;
-      }
-      .sidebar .logo { margin-bottom: 0; font-size: 20px; }
+      .sidebar { position: relative; width: 100%; height: auto; flex-direction: row; align-items: center; justify-content: space-between; padding: 10px 20px; box-shadow: none; }
+      .sidebar .logo { margin-bottom: 0; width: 150px; }
       .nav-links { display: flex; gap: 15px; }
       .main { margin-left: 0; width: 100%; }
       .top-player { flex-direction: column; align-items: center; }
@@ -205,7 +163,7 @@
   <div class="container">
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
-      <div class="logo">Streamless</div>
+      <img src="streamless.svg" alt="Streamless" class="logo">
       <ul class="nav-links">
         <li><a data-page="explore">Explore</a></li>
         <li><a data-page="library">Library</a></li>
@@ -215,7 +173,7 @@
     </aside>
     <!-- Main Content Area -->
     <div class="main">
-      <!-- Top Player Bar with Apple Music icons -->
+      <!-- Top Player Bar -->
       <header class="top-player">
         <div class="player-info">
           <div class="player-details">
@@ -233,14 +191,14 @@
         </div>
       </header>
       
-      <!-- Explore Section (acts as Home) -->
+      <!-- Explore Section -->
       <div id="explore" class="content-section active">
         <header class="explore-header">
           <h1>Explore New Music</h1>
           <p>Discover emerging tracks and artists ranked by their market cap and trading volume.</p>
         </header>
         <section class="explore-grid">
-          <!-- Explore Song Cards (click to open chart modal) -->
+          <!-- Explore Song Cards -->
           <div class="card" data-song="Song 1" data-marketcap="1200000000">
             <div class="card-content">
               <h2>Song 1</h2>
@@ -302,27 +260,92 @@
             </div>
           </div>
         </section>
-        <!-- Recommended For You Section (click to redirect to Events and open seating layout) -->
+        <!-- Recommended For You Section with Inline Seating Popup -->
         <div class="recommended">
           <h2>Recommended For You</h2>
           <div class="recommendation-card" id="recommendationCard">
             <h3>
               Artist 1 Live Concert 
-              <span class="ticket-price-label">$60+</span>
+              <span class="ticket-price-label">$50+</span>
             </h3>
             <p>Experience an exclusive live performance by Artist 1.</p>
+          </div>
+          <!-- Inline seating popup below the recommendation -->
+          <div id="recommendedSeating" style="display:none;">
+            <div class="stage">Stage</div>
+            <div class="theater">
+              <!-- Row A: $90; A4 and A5 unavailable -->
+              <div class="seat available" data-seat="A1" data-price="90">A1</div>
+              <div class="seat available" data-seat="A2" data-price="90">A2</div>
+              <div class="seat available" data-seat="A3" data-price="90">A3</div>
+              <div class="seat available unavailable" data-seat="A4" data-price="90">A4</div>
+              <div class="seat available unavailable" data-seat="A5" data-price="90">A5</div>
+              <div class="seat available" data-seat="A6" data-price="90">A6</div>
+              <div class="seat available" data-seat="A7" data-price="90">A7</div>
+              <div class="seat available" data-seat="A8" data-price="90">A8</div>
+              <div class="seat available" data-seat="A9" data-price="90">A9</div>
+              <div class="seat available" data-seat="A10" data-price="90">A10</div>
+              <!-- Row B: $80; B3 unavailable -->
+              <div class="seat available" data-seat="B1" data-price="80">B1</div>
+              <div class="seat available" data-seat="B2" data-price="80">B2</div>
+              <div class="seat available unavailable" data-seat="B3" data-price="80">B3</div>
+              <div class="seat available" data-seat="B4" data-price="80">B4</div>
+              <div class="seat available" data-seat="B5" data-price="80">B5</div>
+              <div class="seat available" data-seat="B6" data-price="80">B6</div>
+              <div class="seat available" data-seat="B7" data-price="80">B7</div>
+              <div class="seat available" data-seat="B8" data-price="80">B8</div>
+              <div class="seat available" data-seat="B9" data-price="80">B9</div>
+              <div class="seat available" data-seat="B10" data-price="80">B10</div>
+              <!-- Row C: $70 -->
+              <div class="seat available" data-seat="C1" data-price="70">C1</div>
+              <div class="seat available" data-seat="C2" data-price="70">C2</div>
+              <div class="seat available" data-seat="C3" data-price="70">C3</div>
+              <div class="seat available" data-seat="C4" data-price="70">C4</div>
+              <div class="seat available" data-seat="C5" data-price="70">C5</div>
+              <div class="seat available" data-seat="C6" data-price="70">C6</div>
+              <div class="seat available" data-seat="C7" data-price="70">C7</div>
+              <div class="seat available" data-seat="C8" data-price="70">C8</div>
+              <div class="seat available" data-seat="C9" data-price="70">C9</div>
+              <div class="seat available" data-seat="C10" data-price="70">C10</div>
+              <!-- Row D: $60; D6 and D8 unavailable -->
+              <div class="seat available" data-seat="D1" data-price="60">D1</div>
+              <div class="seat available" data-seat="D2" data-price="60">D2</div>
+              <div class="seat available" data-seat="D3" data-price="60">D3</div>
+              <div class="seat available" data-seat="D4" data-price="60">D4</div>
+              <div class="seat available" data-seat="D5" data-price="60">D5</div>
+              <div class="seat available unavailable" data-seat="D6" data-price="60">D6</div>
+              <div class="seat available" data-seat="D7" data-price="60">D7</div>
+              <div class="seat available unavailable" data-seat="D8" data-price="60">D8</div>
+              <div class="seat available" data-seat="D9" data-price="60">D9</div>
+              <div class="seat available" data-seat="D10" data-price="60">D10</div>
+              <!-- Row E: $50; E2 unavailable -->
+              <div class="seat available" data-seat="E1" data-price="50">E1</div>
+              <div class="seat available unavailable" data-seat="E2" data-price="50">E2</div>
+              <div class="seat available" data-seat="E3" data-price="50">E3</div>
+              <div class="seat available" data-seat="E4" data-price="50">E4</div>
+              <div class="seat available" data-seat="E5" data-price="50">E5</div>
+              <div class="seat available" data-seat="E6" data-price="50">E6</div>
+              <div class="seat available" data-seat="E7" data-price="50">E7</div>
+              <div class="seat available" data-seat="E8" data-price="50">E8</div>
+              <div class="seat available" data-seat="E9" data-price="50">E9</div>
+              <div class="seat available" data-seat="E10" data-price="50">E10</div>
+            </div>
+            <div class="checkout-summary">
+              <span id="totalPrice">Total: $0</span>
+              <button class="checkout-btn" id="checkoutBtn">Checkout ($0)</button>
+            </div>
           </div>
         </div>
       </div>
       
-      <!-- Library Section (Playback-Focused) -->
+      <!-- Library Section -->
       <div id="library" class="content-section">
         <h1>Library</h1>
         <div class="library-section">
           <h2>Playlists</h2>
           <button id="createPlaylistBtn">Create Playlist</button>
           <ul>
-            <li class="playlist-item" style="cursor:pointer;">Example Playlist</li>
+            <li class="playlist-item" style="cursor:pointer;">Playlist 1</li>
           </ul>
         </div>
         <div class="library-section">
@@ -347,7 +370,7 @@
         </div>
       </div>
       
-      <!-- Portfolio Section (with action buttons) -->
+      <!-- Portfolio Section -->
       <div id="portfolio" class="content-section">
         <h1>Portfolio</h1>
         <div class="portfolio-value">
@@ -400,35 +423,37 @@
       <!-- Events Section -->
       <div id="events" class="content-section">
         <h1>Events</h1>
+        <div class="create-event-container" style="max-width:600px; margin:0 auto 20px; text-align:center;">
+          <button id="createEventBtn" style="padding: 10px 20px; font-size: 16px; border: none; border-radius: 20px; background-color: #000; color: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            Create Event
+          </button>
+        </div>
         <div class="event-list">
           <ul>
             <li class="event-item" data-event="artistA" style="cursor:pointer;">
               <div class="event-info">
                 <span class="event-title">Artist 1 Live Concert - May 17</span>
-                <span class="event-seats-info">Tickets starting at $60</span>
+                <span class="event-seats-info">Tickets starting at $50</span>
               </div>
             </li>
           </ul>
         </div>
-        <!-- Event Details: Seating layout with seat prices per row -->
         <div class="event-details" id="artistADetails" style="display: none;">
           <div class="stage">Stage</div>
           <div class="theater">
-            <!-- Row A: $90 -->
             <div class="seat available" data-seat="A1" data-price="90">A1</div>
             <div class="seat available" data-seat="A2" data-price="90">A2</div>
             <div class="seat available" data-seat="A3" data-price="90">A3</div>
-            <div class="seat available" data-seat="A4" data-price="90">A4</div>
-            <div class="seat available" data-seat="A5" data-price="90">A5</div>
+            <div class="seat available unavailable" data-seat="A4" data-price="90">A4</div>
+            <div class="seat available unavailable" data-seat="A5" data-price="90">A5</div>
             <div class="seat available" data-seat="A6" data-price="90">A6</div>
             <div class="seat available" data-seat="A7" data-price="90">A7</div>
             <div class="seat available" data-seat="A8" data-price="90">A8</div>
             <div class="seat available" data-seat="A9" data-price="90">A9</div>
             <div class="seat available" data-seat="A10" data-price="90">A10</div>
-            <!-- Row B: $80 -->
             <div class="seat available" data-seat="B1" data-price="80">B1</div>
             <div class="seat available" data-seat="B2" data-price="80">B2</div>
-            <div class="seat available" data-seat="B3" data-price="80">B3</div>
+            <div class="seat available unavailable" data-seat="B3" data-price="80">B3</div>
             <div class="seat available" data-seat="B4" data-price="80">B4</div>
             <div class="seat available" data-seat="B5" data-price="80">B5</div>
             <div class="seat available" data-seat="B6" data-price="80">B6</div>
@@ -436,7 +461,6 @@
             <div class="seat available" data-seat="B8" data-price="80">B8</div>
             <div class="seat available" data-seat="B9" data-price="80">B9</div>
             <div class="seat available" data-seat="B10" data-price="80">B10</div>
-            <!-- Row C: $70 -->
             <div class="seat available" data-seat="C1" data-price="70">C1</div>
             <div class="seat available" data-seat="C2" data-price="70">C2</div>
             <div class="seat available" data-seat="C3" data-price="70">C3</div>
@@ -447,20 +471,18 @@
             <div class="seat available" data-seat="C8" data-price="70">C8</div>
             <div class="seat available" data-seat="C9" data-price="70">C9</div>
             <div class="seat available" data-seat="C10" data-price="70">C10</div>
-            <!-- Row D: $60 -->
             <div class="seat available" data-seat="D1" data-price="60">D1</div>
             <div class="seat available" data-seat="D2" data-price="60">D2</div>
             <div class="seat available" data-seat="D3" data-price="60">D3</div>
             <div class="seat available" data-seat="D4" data-price="60">D4</div>
             <div class="seat available" data-seat="D5" data-price="60">D5</div>
-            <div class="seat available" data-seat="D6" data-price="60">D6</div>
+            <div class="seat available unavailable" data-seat="D6" data-price="60">D6</div>
             <div class="seat available" data-seat="D7" data-price="60">D7</div>
-            <div class="seat available" data-seat="D8" data-price="60">D8</div>
+            <div class="seat available unavailable" data-seat="D8" data-price="60">D8</div>
             <div class="seat available" data-seat="D9" data-price="60">D9</div>
             <div class="seat available" data-seat="D10" data-price="60">D10</div>
-            <!-- Row E: $50 -->
             <div class="seat available" data-seat="E1" data-price="50">E1</div>
-            <div class="seat available" data-seat="E2" data-price="50">E2</div>
+            <div class="seat available unavailable" data-seat="E2" data-price="50">E2</div>
             <div class="seat available" data-seat="E3" data-price="50">E3</div>
             <div class="seat available" data-seat="E4" data-price="50">E4</div>
             <div class="seat available" data-seat="E5" data-price="50">E5</div>
@@ -476,106 +498,119 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  
-  <!-- Chart Modal (for Explore, Portfolio Song, and Ticket charts) -->
-  <div id="chartModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="chartClose">&times;</span>
-      <h2 id="chartTitle">Price Chart</h2>
-      <canvas id="priceChart" width="400" height="200"></canvas>
-    </div>
-  </div>
-  
-  <!-- Sell Ticket Modal (for non-fungible ticket selling) -->
-  <div id="sellTicketModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="sellTicketClose">&times;</span>
-      <h2>Sell Ticket</h2>
-      <p>Enter sale price for this ticket:</p>
-      <input type="number" id="ticketSalePrice" placeholder="Price in $" style="width:100%; padding:10px; margin:10px 0;">
-      <button id="confirmSellTicket" style="width:100%; padding:10px;">Confirm Sell</button>
-    </div>
-  </div>
-  
-  <!-- Playlist Modal (for creating/viewing playlists) -->
-  <div id="playlistModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="playlistClose">&times;</span>
-      <h2 id="playlistModalTitle">Playlist</h2>
-      <div id="playlistContent"></div>
-      <button id="confirmPlaylistBtn" style="width:100%; padding:10px; display:none;">Confirm</button>
+      
+      <!-- Playlist Modal -->
+      <div id="playlistModal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="playlistClose">&times;</span>
+          <h2 id="playlistModalTitle">Playlist 1</h2>
+          <div id="playlistContent">
+            <ul style="padding:10px;">
+              <li style="padding:10px; border-bottom:1px solid #ccc;">Song 1 - Artist 1</li>
+              <li style="padding:10px;">Song 2 - Artist 2</li>
+            </ul>
+          </div>
+          <button id="confirmPlaylistBtn" style="width:100%; padding:10px; display:none;">Confirm</button>
+        </div>
+      </div>
+      
+      <!-- Venue Creator Modal -->
+      <div id="venueCreatorModal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="venueCreatorClose">&times;</span>
+          <h2 style="text-align:center;">Venue Creator</h2>
+          <div id="venueCreatorContent">
+            <!-- Row 1: Grid Rows & Columns, Create Grid and Start Over -->
+            <div style="text-align: center; margin-bottom: 10px;">
+              <label for="gridRows">Grid Rows:</label>
+              <input type="number" id="gridRows" value="5" min="1" style="border-radius:5px; padding:5px;">
+              <label for="gridCols">Grid Columns:</label>
+              <input type="number" id="gridCols" value="5" min="1" style="border-radius:5px; padding:5px;">
+              <button id="createGridBtn" style="padding: 5px 10px; border-radius:5px;">Create Grid</button>
+              <button id="resetVenueBtn" style="padding: 5px 10px; border-radius:5px;">Start Over</button>
+            </div>
+            <!-- Row 2: GA Limit and Mint Price -->
+            <div style="text-align: center; margin-bottom: 10px;">
+              <label for="gaLimit">GA Limit:</label>
+              <input type="number" id="gaLimit" value="100" min="0" style="border-radius:5px; padding:5px; margin-right:10px;">
+              <label for="mintPriceGlobal">Mint Price:</label>
+              <input type="number" id="mintPriceGlobal" value="0.001" step="0.0001" style="border-radius:5px; padding:5px;">
+            </div>
+            <!-- Row 3: Toolbar -->
+            <div id="toolbar" style="text-align: center; margin-bottom:10px;">
+              <button data-tool="stage">Stage</button>
+              <button data-tool="ga">GA</button>
+              <button data-tool="seat">Seat</button>
+              <button data-tool="clear">Clear</button>
+            </div>
+            <!-- Grid Container -->
+            <div id="venueGridContainer" style="margin-top: 10px;">
+              <!-- Grid will be generated here -->
+            </div>
+          </div>
+          <div class="venue-buttons">
+            <button id="saveVenueBtn">Save Venue</button>
+            <button id="cancelVenueBtn">Cancel</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sell Ticket Modal -->
+      <div id="sellTicketModal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="sellTicketClose">&times;</span>
+          <h2>Sell Ticket</h2>
+          <p>Enter sale price for this ticket:</p>
+          <input type="number" id="ticketSalePrice" placeholder="Price in $" style="width:100%; padding:10px; margin:10px 0;">
+          <button id="confirmSellTicket" style="width:100%; padding:10px;">Confirm Sell</button>
+        </div>
+      </div>
+      
+      <!-- Checkout Modal -->
+      <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="checkoutClose">&times;</span>
+          <h2>Checkout</h2>
+          <div id="selectedSeatsSummary"></div>
+          <div id="finalPrice" style="font-size: 18px; margin-top: 10px;"></div>
+          <button id="confirmPurchaseBtn" style="width:100%; padding:10px; margin-top: 20px;">Confirm Purchase</button>
+        </div>
+      </div>
+      
+      <!-- Chart Modal -->
+      <div id="chartModal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="chartClose">&times;</span>
+          <h2 id="chartTitle">Price Chart</h2>
+          <canvas id="priceChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+      
     </div>
   </div>
   
   <script>
-    // Helper to show one section only
+    // Helper: show one section only (using unique IDs)
     function showSection(sectionId) {
-      const sections = document.querySelectorAll('.content-section');
-      sections.forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(sectionId).classList.add('active');
     }
     
     document.addEventListener('DOMContentLoaded', function() {
       // NAVIGATION
-      const navLinks = document.querySelectorAll('.nav-links a');
-      navLinks.forEach(link => {
+      document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', () => { showSection(link.getAttribute('data-page')); });
       });
       document.querySelector('.logo').addEventListener('click', () => { showSection('explore'); });
       
-      // PLAY/PAUSE TOGGLE
+      // PLAY/PAUSE Toggle
       const playBtn = document.getElementById('playBtn');
       playBtn.addEventListener('click', function(e) {
-        // Toggle between play (▶) and pause (⏸)
-        if(this.innerText.trim() === '▶') {
-          this.innerText = '⏸';
-        } else {
-          this.innerText = '▶';
-        }
+        this.innerText = (this.innerText.trim() === '▶') ? '⏸' : '▶';
         e.stopPropagation();
       });
       
-      // GET STARTED MODAL (if present)
-      const getStartedBtn = document.getElementById('getStarted');
-      if(getStartedBtn) {
-        const getStartedModal = document.getElementById('getStartedModal');
-        const getStartedClose = document.getElementById('getStartedClose');
-        getStartedBtn.addEventListener('click', () => { getStartedModal.style.display = 'block'; });
-        getStartedClose.addEventListener('click', () => { getStartedModal.style.display = 'none'; document.getElementById('createAccountForm').style.display = 'none'; });
-      }
-      const connectWalletBtn = document.getElementById('connectWalletBtn');
-      connectWalletBtn.addEventListener('click', () => {
-        const walletAddress = prompt("Enter your wallet address:");
-        if(walletAddress) {
-          const shortened = walletAddress.substring(0,6) + '...' + walletAddress.substring(walletAddress.length - 4);
-          document.querySelector('.account-info').innerHTML = `<img src="https://via.placeholder.com/32" alt="Profile"/> <span>${shortened}</span>`;
-          document.getElementById('getStartedModal').style.display = 'none';
-        }
-      });
-      const showCreateAccountBtn = document.getElementById('showCreateAccountBtn');
-      showCreateAccountBtn && showCreateAccountBtn.addEventListener('click', () => { document.getElementById('createAccountForm').style.display = 'block'; });
-      const signupBtn = document.getElementById('signupBtn');
-      signupBtn && signupBtn.addEventListener('click', () => {
-        const email = document.getElementById('emailInput').value;
-        if(email) {
-          const username = email.split('@')[0];
-          document.querySelector('.account-info').innerHTML = `<img src="https://via.placeholder.com/32" alt="Profile"/> <span>${username}</span>`;
-          document.getElementById('getStartedModal').style.display = 'none';
-        } else { alert("Please enter an email."); }
-      });
-      const gmailSignupBtn = document.getElementById('gmailSignupBtn');
-      gmailSignupBtn && gmailSignupBtn.addEventListener('click', () => {
-        const email = document.getElementById('emailInput').value;
-        if(email) {
-          const username = email.split('@')[0];
-          document.querySelector('.account-info').innerHTML = `<img src="https://via.placeholder.com/32" alt="Profile"/> <span>${username}</span>`;
-          document.getElementById('getStartedModal').style.display = 'none';
-        } else { alert("Please enter your Gmail address."); }
-      });
-      
-      // CHART MODAL FUNCTIONALITY
+      // --- CHART MODAL ---
       const chartModal = document.getElementById('chartModal');
       const chartClose = document.getElementById('chartClose');
       const chartTitle = document.getElementById('chartTitle');
@@ -594,7 +629,7 @@
         chartTitle.textContent = element.querySelector('.item-name').textContent + ' Price Chart';
         chartModal.style.display = 'block';
         const dummyData = generateDummyData(basePrice);
-        if(priceChart) { priceChart.destroy(); }
+        if(priceChart){ priceChart.destroy(); }
         const ctx = document.getElementById('priceChart').getContext('2d');
         priceChart = new Chart(ctx, {
           type: 'line',
@@ -608,7 +643,7 @@
         chartTitle.textContent = element.querySelector('.item-name').textContent + ' Price Chart';
         chartModal.style.display = 'block';
         const dummyData = generateDummyData(floorPrice);
-        if(priceChart) { priceChart.destroy(); }
+        if(priceChart){ priceChart.destroy(); }
         const ctx = document.getElementById('priceChart').getContext('2d');
         priceChart = new Chart(ctx, {
           type: 'line',
@@ -618,11 +653,9 @@
         });
       }
       chartClose.addEventListener('click', () => { chartModal.style.display = 'none'; });
-      window.addEventListener('click', event => { if(event.target == chartModal){ chartModal.style.display = 'none'; } });
       
-      // Explore cards: Clicking a card shows its chart popup
-      const cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
+      // Explore cards: Click to show chart modal
+      document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', () => {
           const song = card.getAttribute('data-song');
           const marketCap = parseFloat(card.getAttribute('data-marketcap'));
@@ -641,30 +674,31 @@
         });
       });
       
-      // Recommended For You: Clicking redirects to Events and opens seating layout
+      // --- Recommended For You Inline Seating Popup ---
       const recommendationCard = document.getElementById('recommendationCard');
       recommendationCard.addEventListener('click', () => {
-        showSection('events');
-        const eventItem = document.querySelector('.event-item');
-        if(eventItem) { eventItem.click(); }
+        const recPopup = document.getElementById('recommendedSeating');
+        recPopup.style.display = (recPopup.style.display === 'block') ? 'none' : 'block';
+      });
+      document.addEventListener('click', function(e) {
+        const recPopup = document.getElementById('recommendedSeating');
+        const recCard = document.getElementById('recommendationCard');
+        if (recPopup.style.display === 'block' && !recPopup.contains(e.target) && !recCard.contains(e.target)) {
+          recPopup.style.display = 'none';
+        }
       });
       
-      // Portfolio: Attach action buttons for songs and tickets
+      // --- Portfolio Section Action Buttons ---
       const attachActionButtons = (selector, isTicket) => {
-        const items = document.querySelectorAll(selector);
-        items.forEach(item => {
-          // View Chart button
+        document.querySelectorAll(selector).forEach(item => {
           item.querySelector('.view-chart').addEventListener('click', e => {
             e.stopPropagation();
-            if(isTicket) { showPortfolioTicketChart(item); }
-            else { showPortfolioSongChart(item); }
+            if(isTicket){ showPortfolioTicketChart(item); } else { showPortfolioSongChart(item); }
           });
-          // Sell button
           item.querySelector('.sell-item').addEventListener('click', e => {
             e.stopPropagation();
             if(isTicket) {
-              sellTicketModal.style.display = 'block';
-              currentTicketItem = item;
+              document.getElementById('sellTicketModal').style.display = 'block';
             } else {
               if(confirm("Do you want to sell this song?")) { alert("Song listed for sale (simulated)."); }
             }
@@ -674,7 +708,7 @@
       attachActionButtons('.portfolio-song', false);
       attachActionButtons('.portfolio-ticket', true);
       
-      // Playlist Modal for Create & View Playlist
+      // --- Playlist Modal ---
       const playlistModal = document.getElementById('playlistModal');
       const playlistClose = document.getElementById('playlistClose');
       const playlistModalTitle = document.getElementById('playlistModalTitle');
@@ -682,101 +716,197 @@
       const confirmPlaylistBtn = document.getElementById('confirmPlaylistBtn');
       document.getElementById('createPlaylistBtn').addEventListener('click', () => {
         playlistModalTitle.textContent = "Create Playlist";
-        playlistContent.innerHTML = `<p>Enter playlist name:</p>
-          <input type="text" id="playlistName" placeholder="Playlist Name" style="width:100%; padding:10px;">`;
+        playlistContent.innerHTML = `<div style="padding:10px; text-align:center;">
+          <label for="playlistNameInput" style="font-weight:500;">Playlist Name:</label>
+          <input type="text" id="playlistNameInput" placeholder="Playlist Name" style="width:90%; padding:8px; margin-top:5px; border-radius:5px; border:1px solid #ccc;">
+        </div>`;
         confirmPlaylistBtn.style.display = 'block';
         playlistModal.style.display = 'block';
       });
       document.querySelector('.playlist-item').addEventListener('click', () => {
-        playlistModalTitle.textContent = "Example Playlist";
-        playlistContent.innerHTML = `<ul>
-          <li>Song 1 - Artist 1</li>
-          <li>Song 2 - Artist 2</li>
+        playlistModalTitle.textContent = "Playlist 1";
+        playlistContent.innerHTML = `<ul style="padding:10px;">
+          <li style="padding:10px; border-bottom:1px solid #ccc;">Song 1 - Artist 1</li>
+          <li style="padding:10px;">Song 2 - Artist 2</li>
         </ul>`;
         confirmPlaylistBtn.style.display = 'none';
         playlistModal.style.display = 'block';
       });
       playlistClose.addEventListener('click', () => { playlistModal.style.display = 'none'; });
       confirmPlaylistBtn.addEventListener('click', () => {
-        const name = document.getElementById('playlistName').value;
-        if(name) { alert("Playlist '" + name + "' created (simulated)."); playlistModal.style.display = 'none'; }
+        const name = document.getElementById('playlistNameInput').value;
+        if(name){ alert("Playlist '" + name + "' created (simulated)."); playlistModal.style.display = 'none'; }
         else { alert("Please enter a playlist name."); }
       });
       
-      // Sell Ticket Modal for concert tickets
+      // --- Sell Ticket Modal ---
       const sellTicketModal = document.getElementById('sellTicketModal');
       const sellTicketClose = document.getElementById('sellTicketClose');
-      let currentTicketItem = null;
       document.getElementById('confirmSellTicket').addEventListener('click', () => {
         const price = document.getElementById('ticketSalePrice').value;
-        if(price && parseFloat(price) > 0) {
+        if(price && parseFloat(price) > 0){
           alert("Ticket listed for sale at $" + price + " (simulated).");
           sellTicketModal.style.display = 'none';
           document.getElementById('ticketSalePrice').value = "";
         } else { alert("Please enter a valid sale price."); }
       });
       sellTicketClose.addEventListener('click', () => { sellTicketModal.style.display = 'none'; });
-      window.addEventListener('click', event => { if(event.target == sellTicketModal){ sellTicketModal.style.display = 'none'; } });
       
-      // Player buttons for previous/next
-      document.getElementById('prevBtn').addEventListener('click', () => { alert('Previous track (simulated).'); });
-      document.getElementById('nextBtn').addEventListener('click', () => { alert('Next track (simulated).'); });
+      // --- Venue Creator Feature ---
+      const createEventBtn = document.getElementById('createEventBtn');
+      const venueCreatorModal = document.getElementById('venueCreatorModal');
+      const venueCreatorClose = document.getElementById('venueCreatorClose');
+      const cancelVenueBtn = document.getElementById('cancelVenueBtn');
+      const resetVenueBtn = document.getElementById('resetVenueBtn');
       
-      // EVENTS SECTION - Event List: Toggle seating layout on row click
-      const eventItems = document.querySelectorAll('.event-item');
-      eventItems.forEach(item => {
-        item.addEventListener('click', () => {
-          const details = document.getElementById('artistADetails');
-          details.style.display = details.style.display === 'block' ? 'none' : 'block';
-        });
+      createEventBtn.addEventListener('click', () => {
+        venueCreatorModal.style.display = 'block';
+      });
+      venueCreatorClose.addEventListener('click', () => {
+        venueCreatorModal.style.display = 'none';
+      });
+      cancelVenueBtn.addEventListener('click', () => {
+        venueCreatorModal.style.display = 'none';
+      });
+      resetVenueBtn.addEventListener('click', () => {
+        document.getElementById("gridRows").value = "5";
+        document.getElementById("gridCols").value = "5";
+        document.getElementById("gaLimit").value = "100";
+        document.getElementById("venueGridContainer").innerHTML = "";
       });
       
-      // EVENTS SECTION - Theater Seat Selection & Checkout
-      let selectedSeats = [];
-      const seatElements = document.querySelectorAll('.theater .seat.available');
-      seatElements.forEach(seat => {
-        seat.addEventListener('click', e => {
-          e.stopPropagation(); // prevent toggling event layout
-          if(seat.classList.contains('selected')) {
-            seat.classList.remove('selected');
-            selectedSeats = selectedSeats.filter(s => s !== seat.getAttribute('data-seat'));
-          } else {
-            seat.classList.add('selected');
-            selectedSeats.push(seat.getAttribute('data-seat'));
+      // --- Venue Creator Sandbox Code ---
+      let currentTool = null;
+      document.querySelectorAll("#toolbar button").forEach(button => {
+        button.addEventListener("click", function() {
+          currentTool = this.getAttribute("data-tool");
+        });
+      });
+      document.getElementById("createGridBtn").addEventListener("click", function() {
+        const rows = parseInt(document.getElementById("gridRows").value);
+        const cols = parseInt(document.getElementById("gridCols").value);
+        createGrid(rows, cols);
+      });
+      function createGrid(rows, cols) {
+        const container = document.getElementById("venueGridContainer");
+        container.innerHTML = "";
+        const table = document.createElement("table");
+        table.style.borderCollapse = "collapse";
+        for (let r = 0; r < rows; r++){
+          const tr = document.createElement("tr");
+          for (let c = 0; c < cols; c++){
+            const td = document.createElement("td");
+            td.setAttribute("data-row", r);
+            td.setAttribute("data-col", c);
+            // Double-click to edit cell label and price
+            td.addEventListener("dblclick", function(e) {
+              e.stopPropagation();
+              let currentLabel = td.querySelector('.seat-label') ? td.querySelector('.seat-label').innerText : td.innerText;
+              let newLabel = prompt("Enter seat label:", currentLabel);
+              if(newLabel !== null) {
+                if(td.querySelector('.seat-label')) {
+                  td.querySelector('.seat-label').innerText = newLabel;
+                } else {
+                  td.innerText = newLabel;
+                }
+                td.setAttribute("data-seat", newLabel);
+              }
+              let newPrice = prompt("Enter starting mint price for this seat:", td.getAttribute("data-price") || "");
+              if(newPrice !== null) {
+                td.setAttribute("data-price", newPrice);
+                if(td.querySelector('.seat-price')) {
+                  td.querySelector('.seat-price').value = newPrice;
+                }
+              }
+            });
+            td.addEventListener("click", function(e) {
+              e.stopPropagation();
+              if (currentTool) {
+                if (currentTool === "clear") {
+                  td.innerHTML = "";
+                  td.style.backgroundColor = "";
+                  td.removeAttribute("data-price");
+                } else if (currentTool === "seat") {
+                  let rowIndex = parseInt(td.getAttribute("data-row"));
+                  let colIndex = parseInt(td.getAttribute("data-col"));
+                  let letter = String.fromCharCode(65 + rowIndex);
+                  let seatLabel = letter + (colIndex + 1);
+                  let mintPrice = document.getElementById("mintPriceGlobal").value;
+                  td.innerHTML = `<div class="seat-label">${seatLabel}</div><input type="number" class="seat-price" value="${mintPrice}" style="width:100%; padding:2px; margin-top:2px; box-sizing:border-box;">`;
+                  td.setAttribute("data-price", mintPrice);
+                  td.setAttribute("data-seat", seatLabel);
+                  td.style.backgroundColor = "#ADD8E6";
+                } else if (currentTool === "stage") {
+                  td.innerHTML = "Stage";
+                  td.style.backgroundColor = "#FFD700";
+                  td.removeAttribute("data-price");
+                } else if (currentTool === "ga") {
+                  td.innerHTML = "GA";
+                  td.style.backgroundColor = "#90EE90";
+                  td.removeAttribute("data-price");
+                }
+              }
+            });
+            tr.appendChild(td);
           }
-          updateTotalPrice();
-        });
-      });
-      function updateTotalPrice() {
-        let total = 0;
-        seatElements.forEach(seat => { if(seat.classList.contains('selected')) { total += parseFloat(seat.getAttribute('data-price')); } });
-        document.getElementById('totalPrice').textContent = "Total: $" + total;
-        document.getElementById('checkoutBtn').textContent = "Checkout ($" + total + ")";
+          table.appendChild(tr);
+        }
+        container.appendChild(table);
       }
+      
+      // --- Events Section: Attach seat event listeners for live total update ---
+      function updateEventTotal() {
+          let total = 0;
+          document.querySelectorAll('#artistADetails .seat.selected').forEach(s => {
+              total += parseFloat(s.getAttribute('data-price')) || 0;
+          });
+          document.getElementById('totalPrice').textContent = "Total: $" + total;
+          document.getElementById('checkoutBtn').textContent = "Checkout ($" + total + ")";
+      }
+      const eventSeats = document.querySelectorAll('#artistADetails .seat.available');
+      eventSeats.forEach(seat => {
+          seat.addEventListener('click', function(e) {
+              e.stopPropagation();
+              if(seat.classList.contains('selected')){
+                  seat.classList.remove('selected');
+              } else {
+                  if(seat.classList.contains('unavailable')) return;
+                  seat.classList.add('selected');
+              }
+              updateEventTotal();
+          });
+      });
+      
+      // --- Checkout Modal for Events ---
       const checkoutBtn = document.getElementById('checkoutBtn');
       const checkoutModal = document.getElementById('checkoutModal');
       const checkoutClose = document.getElementById('checkoutClose');
       const selectedSeatsSummary = document.getElementById('selectedSeatsSummary');
       const finalPriceDisplay = document.getElementById('finalPrice');
       checkoutBtn.addEventListener('click', () => {
-        if(selectedSeats.length === 0) { alert("Please select at least one seat."); }
-        else {
-          selectedSeatsSummary.innerHTML = "<p>Selected Seats: " + selectedSeats.join(', ') + "</p>";
+        const selected = Array.from(document.querySelectorAll('#artistADetails .seat.selected'));
+        if(selected.length === 0){
+          alert("Please select at least one seat.");
+        } else {
+          const seatIds = selected.map(seat => seat.getAttribute('data-seat'));
+          selectedSeatsSummary.innerHTML = "<p>Selected Seats: " + seatIds.join(', ') + "</p>";
           let total = 0;
-          seatElements.forEach(seat => { if(seat.classList.contains('selected')) { total += parseFloat(seat.getAttribute('data-price')); } });
+          selected.forEach(seat => {
+            total += parseFloat(seat.getAttribute('data-price')) || 0;
+          });
           finalPriceDisplay.textContent = "Total Price: $" + total;
           checkoutModal.style.display = 'block';
         }
       });
       checkoutClose.addEventListener('click', () => { checkoutModal.style.display = 'none'; });
-      window.addEventListener('click', event => { if(event.target == checkoutModal){ checkoutModal.style.display = 'none'; } });
       document.getElementById('confirmPurchaseBtn').addEventListener('click', () => {
         alert("Purchase successful! (NFT transaction simulated.)");
-        seatElements.forEach(seat => seat.classList.remove('selected'));
-        selectedSeats = [];
-        updateTotalPrice();
+        document.querySelectorAll('#artistADetails .seat.selected').forEach(seat => seat.classList.remove('selected'));
         checkoutModal.style.display = 'none';
+        document.getElementById('totalPrice').textContent = "Total: $0";
+        document.getElementById('checkoutBtn').textContent = "Checkout ($0)";
       });
+      
     });
   </script>
 </body>
