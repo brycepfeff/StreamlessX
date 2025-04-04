@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Streamless - Explore</title>
-  <!-- Favicon and Logo -->
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!-- Favicon: referenced from the public folder -->
+  <link rel="icon" type="image/svg+xml" href="/public/Favicon.svg">
   <!-- Import Manrope font -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" rel="stylesheet">
   <!-- Chart.js CDN -->
@@ -163,7 +163,7 @@
   <div class="container">
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
-      <img src="streamless.svg" alt="Streamless" class="logo">
+      <img src="/public/Streamless.svg" alt="Streamless" class="logo">
       <ul class="nav-links">
         <li><a data-page="explore">Explore</a></li>
         <li><a data-page="library">Library</a></li>
@@ -331,8 +331,8 @@
               <div class="seat available" data-seat="E10" data-price="50">E10</div>
             </div>
             <div class="checkout-summary">
-              <span id="totalPrice">Total: $0</span>
-              <button class="checkout-btn" id="checkoutBtn">Checkout ($0)</button>
+              <span id="recommendedTotalPrice">Total: $0</span>
+              <button class="checkout-btn" id="recommendedCheckoutBtn">Checkout ($0)</button>
             </div>
           </div>
         </div>
@@ -688,25 +688,92 @@
         }
       });
       
-      // --- Portfolio Section Action Buttons ---
-      const attachActionButtons = (selector, isTicket) => {
-        document.querySelectorAll(selector).forEach(item => {
-          item.querySelector('.view-chart').addEventListener('click', e => {
-            e.stopPropagation();
-            if(isTicket){ showPortfolioTicketChart(item); } else { showPortfolioSongChart(item); }
+      // --- Recommended Seating: Attach seat event listeners for live total update ---
+      function updateRecommendedTotal() {
+          let total = 0;
+          document.querySelectorAll('#recommendedSeating .seat.selected').forEach(s => {
+              total += parseFloat(s.getAttribute('data-price')) || 0;
           });
-          item.querySelector('.sell-item').addEventListener('click', e => {
-            e.stopPropagation();
-            if(isTicket) {
-              document.getElementById('sellTicketModal').style.display = 'block';
-            } else {
-              if(confirm("Do you want to sell this song?")) { alert("Song listed for sale (simulated)."); }
-            }
+          document.getElementById('recommendedTotalPrice').textContent = "Total: $" + total;
+          document.getElementById('recommendedCheckoutBtn').textContent = "Checkout ($" + total + ")";
+      }
+      const recommendedSeats = document.querySelectorAll('#recommendedSeating .seat.available');
+      recommendedSeats.forEach(seat => {
+          seat.addEventListener('click', function(e) {
+              e.stopPropagation();
+              if(seat.classList.contains('selected')){
+                  seat.classList.remove('selected');
+              } else {
+                  if(seat.classList.contains('unavailable')) return;
+                  seat.classList.add('selected');
+              }
+              updateRecommendedTotal();
           });
+      });
+      
+      // --- Events Section: Toggle event details on event item click ---
+      document.querySelectorAll('.event-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const eventId = item.getAttribute('data-event');
+          if (eventId === 'artistA') {
+            const details = document.getElementById('artistADetails');
+            details.style.display = (details.style.display === 'block') ? 'none' : 'block';
+          }
         });
-      };
-      attachActionButtons('.portfolio-song', false);
-      attachActionButtons('.portfolio-ticket', true);
+      });
+      
+      // --- Events Section: Attach seat event listeners for live total update ---
+      function updateEventTotal() {
+          let total = 0;
+          document.querySelectorAll('#artistADetails .seat.selected').forEach(s => {
+              total += parseFloat(s.getAttribute('data-price')) || 0;
+          });
+          document.getElementById('totalPrice').textContent = "Total: $" + total;
+          document.getElementById('checkoutBtn').textContent = "Checkout ($" + total + ")";
+      }
+      const eventSeats = document.querySelectorAll('#artistADetails .seat.available');
+      eventSeats.forEach(seat => {
+          seat.addEventListener('click', function(e) {
+              e.stopPropagation();
+              if(seat.classList.contains('selected')){
+                  seat.classList.remove('selected');
+              } else {
+                  if(seat.classList.contains('unavailable')) return;
+                  seat.classList.add('selected');
+              }
+              updateEventTotal();
+          });
+      });
+      
+      // --- Checkout Modal for Events ---
+      const checkoutBtn = document.getElementById('checkoutBtn');
+      const checkoutModal = document.getElementById('checkoutModal');
+      const checkoutClose = document.getElementById('checkoutClose');
+      const selectedSeatsSummary = document.getElementById('selectedSeatsSummary');
+      const finalPriceDisplay = document.getElementById('finalPrice');
+      checkoutBtn.addEventListener('click', () => {
+        const selected = Array.from(document.querySelectorAll('#artistADetails .seat.selected'));
+        if(selected.length === 0){
+          alert("Please select at least one seat.");
+        } else {
+          const seatIds = selected.map(seat => seat.getAttribute('data-seat'));
+          selectedSeatsSummary.innerHTML = "<p>Selected Seats: " + seatIds.join(', ') + "</p>";
+          let total = 0;
+          selected.forEach(seat => {
+            total += parseFloat(seat.getAttribute('data-price')) || 0;
+          });
+          finalPriceDisplay.textContent = "Total Price: $" + total;
+          checkoutModal.style.display = 'block';
+        }
+      });
+      checkoutClose.addEventListener('click', () => { checkoutModal.style.display = 'none'; });
+      document.getElementById('confirmPurchaseBtn').addEventListener('click', () => {
+        alert("Purchase successful! (NFT transaction simulated.)");
+        document.querySelectorAll('#artistADetails .seat.selected').forEach(seat => seat.classList.remove('selected'));
+        checkoutModal.style.display = 'none';
+        document.getElementById('totalPrice').textContent = "Total: $0";
+        document.getElementById('checkoutBtn').textContent = "Checkout ($0)";
+      });
       
       // --- Playlist Modal ---
       const playlistModal = document.getElementById('playlistModal');
@@ -853,59 +920,6 @@
         }
         container.appendChild(table);
       }
-      
-      // --- Events Section: Attach seat event listeners for live total update ---
-      function updateEventTotal() {
-          let total = 0;
-          document.querySelectorAll('#artistADetails .seat.selected').forEach(s => {
-              total += parseFloat(s.getAttribute('data-price')) || 0;
-          });
-          document.getElementById('totalPrice').textContent = "Total: $" + total;
-          document.getElementById('checkoutBtn').textContent = "Checkout ($" + total + ")";
-      }
-      const eventSeats = document.querySelectorAll('#artistADetails .seat.available');
-      eventSeats.forEach(seat => {
-          seat.addEventListener('click', function(e) {
-              e.stopPropagation();
-              if(seat.classList.contains('selected')){
-                  seat.classList.remove('selected');
-              } else {
-                  if(seat.classList.contains('unavailable')) return;
-                  seat.classList.add('selected');
-              }
-              updateEventTotal();
-          });
-      });
-      
-      // --- Checkout Modal for Events ---
-      const checkoutBtn = document.getElementById('checkoutBtn');
-      const checkoutModal = document.getElementById('checkoutModal');
-      const checkoutClose = document.getElementById('checkoutClose');
-      const selectedSeatsSummary = document.getElementById('selectedSeatsSummary');
-      const finalPriceDisplay = document.getElementById('finalPrice');
-      checkoutBtn.addEventListener('click', () => {
-        const selected = Array.from(document.querySelectorAll('#artistADetails .seat.selected'));
-        if(selected.length === 0){
-          alert("Please select at least one seat.");
-        } else {
-          const seatIds = selected.map(seat => seat.getAttribute('data-seat'));
-          selectedSeatsSummary.innerHTML = "<p>Selected Seats: " + seatIds.join(', ') + "</p>";
-          let total = 0;
-          selected.forEach(seat => {
-            total += parseFloat(seat.getAttribute('data-price')) || 0;
-          });
-          finalPriceDisplay.textContent = "Total Price: $" + total;
-          checkoutModal.style.display = 'block';
-        }
-      });
-      checkoutClose.addEventListener('click', () => { checkoutModal.style.display = 'none'; });
-      document.getElementById('confirmPurchaseBtn').addEventListener('click', () => {
-        alert("Purchase successful! (NFT transaction simulated.)");
-        document.querySelectorAll('#artistADetails .seat.selected').forEach(seat => seat.classList.remove('selected'));
-        checkoutModal.style.display = 'none';
-        document.getElementById('totalPrice').textContent = "Total: $0";
-        document.getElementById('checkoutBtn').textContent = "Checkout ($0)";
-      });
       
     });
   </script>
