@@ -46,6 +46,13 @@
     .account-info { flex: 1; text-align: right; }
     .player-details h3 { font-size: 18px; margin-bottom: 5px; }
     .player-details p { font-size: 14px; color: #555; }
+    /* Replace text login with profile icon */
+    .account-info #loginBtn {
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+    }
+    .account-info #loginBtn img { width: 100%; height: 100%; object-fit: contain; }
     .play-controls button, .account-info button { background: none; border: none; cursor: pointer; }
     .play-controls button { font-size: 24px; margin: 0 10px; min-width: 40px; }
     .account-info button { font-size: 16px; }
@@ -56,6 +63,7 @@
     .explore-header h1 { font-size: 32px; font-weight: 600; margin-bottom: 10px; text-align: center; }
     .explore-header p { font-size: 16px; color: #555; text-align: center; margin-bottom: 20px; }
     .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    /* Updated Explore Card Layout */
     .card {
       background-color: #fff;
       border-radius: 12px;
@@ -65,10 +73,18 @@
       padding: 15px;
       cursor: pointer;
     }
-    .card-content h2 { margin-bottom: 10px; font-size: 20px; font-weight: 600; }
-    .card-content p { font-size: 14px; color: #555; margin: 5px 0; }
-    .stats { margin-top: auto; border-top: 2px solid #f7f7f7; padding-top: 10px; font-size: 13px; color: #333; }
-    .stats span { display: block; margin-bottom: 5px; }
+    .card-content .row1,
+    .card-content .row2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-content .row1 .song-artist { font-size: 18px; font-weight: 600; }
+    .card-content .row1 .price { font-size: 18px; font-weight: bold; color: #000; }
+    .card-content .row2 { margin-top: 8px; font-size: 14px; color: #555; }
+    .card-content .row2 .market-cap,
+    .card-content .row2 .volume { }
+    /* End Explore Card Layout */
     .recommended {
       max-width: 600px;
       margin: 40px auto 0;
@@ -188,7 +204,6 @@
       box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
     .event-item .event-info { display: flex; justify-content: space-between; width: 100%; }
-    /* The event seats info uses .ticket-price-label */
     .event-details { max-width: 600px; margin: 0 auto; display: none; }
     .theater { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 10px; }
     .seat {
@@ -230,7 +245,7 @@
     #venueGridContainer { margin-top: 10px; }
     #venueGridContainer table { width: 100%; border-collapse: collapse; }
     #venueGridContainer td {
-      border: 1px solid #ccc; width: 40px; height: 40px;
+      border: 2px solid #f7f7f7; width: 40px; height: 40px;
       text-align: center; vertical-align: middle; cursor: pointer;
     }
     .venue-buttons { text-align: center; margin-top: 10px; }
@@ -295,7 +310,7 @@
         padding-top: 60px; /* space for mobile header */
         padding-bottom: 70px; /* space for mobile play bar */
       }
-      /* Mobile Header with centered content and hamburger on left */
+      /* Mobile Header with space-between layout */
       .mobile-header {
         display: flex;
         position: fixed;
@@ -305,21 +320,27 @@
         height: 60px;
         background-color: #fff;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        padding: 0 20px;
         box-shadow: 0 0 8px rgba(0,0,0,0.15);
         z-index: 1100;
       }
-      .mobile-header .mobile-logo {
-        width: 150px;
-        height: 40px;
+      .mobile-nav-toggle {
+        font-size: 32px; /* 20% smaller than 40px */
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        cursor: pointer;
+      }
+      .mobile-profile {
+        width: 32px;
+        height: 32px;
         object-fit: contain;
         cursor: pointer;
       }
-      .mobile-header .mobile-nav-toggle {
-        position: absolute;
-        left: 20px;
-        font-size: 24px;
-        cursor: pointer;
+      .mobile-logo {
+        max-height: 40px;
+        object-fit: contain;
       }
       /* Mobile Dropdown Navigation: full-width, centered, with rounded bottom edges */
       .mobile-nav {
@@ -397,8 +418,8 @@
   <!-- Mobile Header (Visible on Mobile Only) -->
   <header class="mobile-header">
     <div class="mobile-nav-toggle">&#9776;</div>
-    <!-- Use Favicon in place of desktop logo -->
-    <img src="Favicon.svg" alt="Favicon" class="mobile-logo">
+    <img src="Favicon.svg" alt="Streamless" class="mobile-logo">
+    <img src="profile.svg" alt="Profile" class="mobile-profile">
   </header>
   <!-- Mobile Navigation Dropdown -->
   <nav class="mobile-nav">
@@ -423,7 +444,7 @@
     </aside>
     <!-- Main Content Area (Desktop remains unchanged) -->
     <div class="main">
-      <!-- Desktop Top Player Bar (Unchanged) -->
+      <!-- Desktop Top Player Bar (Unchanged except Login button replacement) -->
       <header class="top-player">
         <div class="player-info">
           <div class="player-details">
@@ -437,7 +458,8 @@
           <button id="nextBtn">&#9197;</button>
         </div>
         <div class="account-info">
-          <button id="loginBtn">Login</button>
+          <!-- Replace text login with profile icon -->
+          <img id="loginBtn" src="profile.svg" alt="Profile" style="cursor: pointer; width: 32px; height: 32px;">
         </div>
       </header>
       
@@ -448,64 +470,76 @@
           <p>Discover emerging tracks and artists ranked by their market cap and trading volume.</p>
         </header>
         <section class="explore-grid">
-          <!-- Explore Song Cards -->
+          <!-- Updated Explore Song Cards -->
           <div class="card" data-song="Song 1" data-marketcap="1200000000">
             <div class="card-content">
-              <h2>Song 1</h2>
-              <p>Artist 1</p>
-              <div class="stats">
-                <span>Market Cap: $1.2B</span>
-                <span>Trading Volume: $150M</span>
+              <div class="row1" style="display:flex; justify-content: space-between; align-items: center;">
+                <div class="song-artist">Song 1 - Artist 1</div>
+                <div class="price" style="font-size:18px; font-weight:bold; color:#000;"></div>
+              </div>
+              <div class="row2" style="display:flex; justify-content: space-between; margin-top:8px; font-size:14px; color:#555;">
+                <div class="market-cap">Market Cap: $1.2B</div>
+                <div class="volume">Trading Volume: $150M</div>
               </div>
             </div>
           </div>
           <div class="card" data-song="Song 2" data-marketcap="900000000">
             <div class="card-content">
-              <h2>Song 2</h2>
-              <p>Artist 2</p>
-              <div class="stats">
-                <span>Market Cap: $900M</span>
-                <span>Trading Volume: $120M</span>
+              <div class="row1" style="display:flex; justify-content: space-between; align-items: center;">
+                <div class="song-artist">Song 2 - Artist 2</div>
+                <div class="price" style="font-size:18px; font-weight:bold; color:#000;"></div>
+              </div>
+              <div class="row2" style="display:flex; justify-content: space-between; margin-top:8px; font-size:14px; color:#555;">
+                <div class="market-cap">Market Cap: $900M</div>
+                <div class="volume">Trading Volume: $120M</div>
               </div>
             </div>
           </div>
           <div class="card" data-song="Song 3" data-marketcap="750000000">
             <div class="card-content">
-              <h2>Song 3</h2>
-              <p>Artist 3</p>
-              <div class="stats">
-                <span>Market Cap: $750M</span>
-                <span>Trading Volume: $95M</span>
+              <div class="row1" style="display:flex; justify-content: space-between; align-items: center;">
+                <div class="song-artist">Song 3 - Artist 3</div>
+                <div class="price" style="font-size:18px; font-weight:bold; color:#000;"></div>
+              </div>
+              <div class="row2" style="display:flex; justify-content: space-between; margin-top:8px; font-size:14px; color:#555;">
+                <div class="market-cap">Market Cap: $750M</div>
+                <div class="volume">Trading Volume: $95M</div>
               </div>
             </div>
           </div>
           <div class="card" data-song="Song 4" data-marketcap="600000000">
             <div class="card-content">
-              <h2>Song 4</h2>
-              <p>Artist 4</p>
-              <div class="stats">
-                <span>Market Cap: $600M</span>
-                <span>Trading Volume: $80M</span>
+              <div class="row1" style="display:flex; justify-content: space-between; align-items: center;">
+                <div class="song-artist">Song 4 - Artist 4</div>
+                <div class="price" style="font-size:18px; font-weight:bold; color:#000;"></div>
+              </div>
+              <div class="row2" style="display:flex; justify-content: space-between; margin-top:8px; font-size:14px; color:#555;">
+                <div class="market-cap">Market Cap: $600M</div>
+                <div class="volume">Trading Volume: $80M</div>
               </div>
             </div>
           </div>
           <div class="card" data-song="Song 5" data-marketcap="450000000">
             <div class="card-content">
-              <h2>Song 5</h2>
-              <p>Artist 5</p>
-              <div class="stats">
-                <span>Market Cap: $450M</span>
-                <span>Trading Volume: $65M</span>
+              <div class="row1" style="display:flex; justify-content: space-between; align-items: center;">
+                <div class="song-artist">Song 5 - Artist 5</div>
+                <div class="price" style="font-size:18px; font-weight:bold; color:#000;"></div>
+              </div>
+              <div class="row2" style="display:flex; justify-content: space-between; margin-top:8px; font-size:14px; color:#555;">
+                <div class="market-cap">Market Cap: $450M</div>
+                <div class="volume">Trading Volume: $65M</div>
               </div>
             </div>
           </div>
           <div class="card" data-song="Song 6" data-marketcap="300000000">
             <div class="card-content">
-              <h2>Song 6</h2>
-              <p>Artist 6</p>
-              <div class="stats">
-                <span>Market Cap: $300M</span>
-                <span>Trading Volume: $50M</span>
+              <div class="row1" style="display:flex; justify-content: space-between; align-items: center;">
+                <div class="song-artist">Song 6 - Artist 6</div>
+                <div class="price" style="font-size:18px; font-weight:bold; color:#000;"></div>
+              </div>
+              <div class="row2" style="display:flex; justify-content: space-between; margin-top:8px; font-size:14px; color:#555;">
+                <div class="market-cap">Market Cap: $300M</div>
+                <div class="volume">Trading Volume: $50M</div>
               </div>
             </div>
           </div>
@@ -584,167 +618,6 @@
               <span id="totalPrice">Total: $0</span>
               <button class="checkout-btn" id="checkoutBtn">Checkout ($0)</button>
             </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Library Section -->
-      <div id="library" class="content-section">
-        <h1>Library</h1>
-        <div class="library-section">
-          <h2>Playlists</h2>
-          <button id="createPlaylistBtn">Create Playlist</button>
-          <ul>
-            <li class="playlist-item" style="cursor:pointer;">Playlist 1</li>
-          </ul>
-        </div>
-        <div class="library-section">
-          <h2>Songs</h2>
-          <ul>
-            <li class="library-song" data-price="0.005" style="cursor:pointer;">
-              <span class="item-name">Song 1 - Artist 1</span>
-              <span class="item-price">$0.005</span>
-            </li>
-            <li class="library-song" data-price="0.005" style="cursor:pointer;">
-              <span class="item-name">Song 2 - Artist 2</span>
-              <span class="item-price">$0.005</span>
-            </li>
-          </ul>
-        </div>
-        <div class="library-section">
-          <h2>Artists</h2>
-          <ul>
-            <li style="cursor:pointer;">Artist 1</li>
-            <li style="cursor:pointer;">Artist 2</li>
-          </ul>
-        </div>
-      </div>
-      
-      <!-- Portfolio Section -->
-      <div id="portfolio" class="content-section">
-        <h1>Portfolio</h1>
-        <div class="portfolio-value">
-          <h2>Total Portfolio Value: $180.01</h2>
-        </div>
-        <div class="portfolio-section">
-          <h3>Songs Owned</h3>
-          <ul>
-            <li class="portfolio-song" data-price="0.005">
-              <span class="item-name">Song 1 - Artist 1</span>
-              <span class="item-actions">
-                <button class="view-chart">Chart</button>
-                <button class="sell-item">Sell</button>
-              </span>
-              <span class="item-price">$0.005</span>
-            </li>
-            <li class="portfolio-song" data-price="0.005">
-              <span class="item-name">Song 2 - Artist 2</span>
-              <span class="item-actions">
-                <button class="view-chart">Chart</button>
-                <button class="sell-item">Sell</button>
-              </span>
-              <span class="item-price">$0.005</span>
-            </li>
-          </ul>
-        </div>
-        <div class="portfolio-section">
-          <h3>Event Tickets</h3>
-          <ul>
-            <li class="portfolio-ticket" data-floor="90">
-              <span class="item-name">Artist 1 Live Concert - Seat A4</span>
-              <span class="item-actions">
-                <button class="view-chart">Chart</button>
-                <button class="sell-item">Sell</button>
-              </span>
-              <span class="item-price">$90</span>
-            </li>
-            <li class="portfolio-ticket" data-floor="90">
-              <span class="item-name">Artist 1 Live Concert - Seat A5</span>
-              <span class="item-actions">
-                <button class="view-chart">Chart</button>
-                <button class="sell-item">Sell</button>
-              </span>
-              <span class="item-price">$90</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      
-      <!-- Events Section -->
-      <div id="events" class="content-section">
-        <h1>Events</h1>
-        <div class="create-event-container" style="max-width:600px; margin:0 auto 20px; text-align:center;">
-          <button id="createEventBtn" style="padding: 10px 20px; font-size: 16px; border: none; border-radius: 20px; background-color: #000; color: #fff; cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.15);">
-            Create Event
-          </button>
-        </div>
-        <div class="event-list">
-          <ul>
-            <li class="event-item" data-event="artistA" style="cursor:pointer;">
-              <div class="event-info">
-                <span class="event-title">Artist 1 Live Concert - May 17</span>
-                <span class="ticket-price-label">$50+</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="event-details" id="artistADetails" style="display: none;">
-          <div class="stage">Stage</div>
-          <div class="theater">
-            <div class="seat available" data-seat="A1" data-price="90">A1</div>
-            <div class="seat available" data-seat="A2" data-price="90">A2</div>
-            <div class="seat available" data-seat="A3" data-price="90">A3</div>
-            <div class="seat available unavailable" data-seat="A4" data-price="90">A4</div>
-            <div class="seat available unavailable" data-seat="A5" data-price="90">A5</div>
-            <div class="seat available" data-seat="A6" data-price="90">A6</div>
-            <div class="seat available" data-seat="A7" data-price="90">A7</div>
-            <div class="seat available" data-seat="A8" data-price="90">A8</div>
-            <div class="seat available" data-seat="A9" data-price="90">A9</div>
-            <div class="seat available" data-seat="A10" data-price="90">A10</div>
-            <div class="seat available" data-seat="B1" data-price="80">B1</div>
-            <div class="seat available" data-seat="B2" data-price="80">B2</div>
-            <div class="seat available unavailable" data-seat="B3" data-price="80">B3</div>
-            <div class="seat available" data-seat="B4" data-price="80">B4</div>
-            <div class="seat available" data-seat="B5" data-price="80">B5</div>
-            <div class="seat available" data-seat="B6" data-price="80">B6</div>
-            <div class="seat available" data-seat="B7" data-price="80">B7</div>
-            <div class="seat available" data-seat="B8" data-price="80">B8</div>
-            <div class="seat available" data-seat="B9" data-price="80">B9</div>
-            <div class="seat available" data-seat="B10" data-price="80">B10</div>
-            <div class="seat available" data-seat="C1" data-price="70">C1</div>
-            <div class="seat available" data-seat="C2" data-price="70">C2</div>
-            <div class="seat available" data-seat="C3" data-price="70">C3</div>
-            <div class="seat available" data-seat="C4" data-price="70">C4</div>
-            <div class="seat available" data-seat="C5" data-price="70">C5</div>
-            <div class="seat available" data-seat="C6" data-price="70">C6</div>
-            <div class="seat available" data-seat="C7" data-price="70">C7</div>
-            <div class="seat available" data-seat="C8" data-price="70">C8</div>
-            <div class="seat available" data-seat="C9" data-price="70">C9</div>
-            <div class="seat available" data-seat="C10" data-price="70">C10</div>
-            <div class="seat available" data-seat="D1" data-price="60">D1</div>
-            <div class="seat available" data-seat="D2" data-price="60">D2</div>
-            <div class="seat available" data-seat="D3" data-price="60">D3</div>
-            <div class="seat available" data-seat="D4" data-price="60">D4</div>
-            <div class="seat available" data-seat="D5" data-price="60">D5</div>
-            <div class="seat available unavailable" data-seat="D6" data-price="60">D6</div>
-            <div class="seat available" data-seat="D7" data-price="60">D7</div>
-            <div class="seat available unavailable" data-seat="D8" data-price="60">D8</div>
-            <div class="seat available" data-seat="D9" data-price="60">D9</div>
-            <div class="seat available" data-seat="D10" data-price="60">D10</div>
-            <div class="seat available" data-seat="E1" data-price="50">E1</div>
-            <div class="seat available unavailable" data-seat="E2" data-price="50">E2</div>
-            <div class="seat available" data-seat="E3" data-price="50">E3</div>
-            <div class="seat available" data-seat="E4" data-price="50">E4</div>
-            <div class="seat available" data-seat="E5" data-price="50">E5</div>
-            <div class="seat available" data-seat="E6" data-price="50">E6</div>
-            <div class="seat available" data-seat="E7" data-price="50">E7</div>
-            <div class="seat available" data-seat="E8" data-price="50">E8</div>
-            <div class="seat available" data-seat="E9" data-price="50">E9</div>
-            <div class="seat available" data-seat="E10" data-price="50">E10</div>
-          </div>
-          <div class="checkout-summary">
-            <span id="totalPrice">Total: $0</span>
-            <button class="checkout-btn" id="checkoutBtn">Checkout ($0)</button>
           </div>
         </div>
       </div>
@@ -852,6 +725,19 @@
     </div>
   </div>
   
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="loginModalClose">&times;</span>
+      <h2 style="text-align: center;">Login</h2>
+      <div style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
+        <button id="loginButton" style="margin: 10px; padding: 10px 20px; width: 80%;">Login</button>
+        <button id="signUpButton" style="margin: 10px; padding: 10px 20px; width: 80%;">Sign Up</button>
+        <button id="connectWalletButton" style="margin: 10px; padding: 10px 20px; width: 80%;">Connect Wallet</button>
+      </div>
+    </div>
+  </div>
+  
   <script>
     // Helper: show one section only (using unique IDs) and persist active section in localStorage
     function showSection(sectionId) {
@@ -892,6 +778,44 @@
       document.querySelector('.mobile-logo').addEventListener('click', () => {
         showSection('explore');
         document.querySelector('.mobile-nav').style.display = 'none';
+      });
+      // Mobile Profile Click: Open Login Modal
+      document.querySelector('.mobile-profile').addEventListener('click', () => {
+        document.getElementById('loginModal').style.display = 'block';
+      });
+      
+      // Show login modal when desktop login icon is clicked
+      const loginModal = document.getElementById('loginModal');
+      const loginModalClose = document.getElementById('loginModalClose');
+      document.getElementById('loginBtn').addEventListener('click', () => {
+        loginModal.style.display = 'block';
+      });
+      loginModalClose.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+      });
+      
+      // Add basic functionality for login/sign up buttons
+      document.getElementById('loginButton').addEventListener('click', () => {
+        alert("Login feature not implemented yet.");
+      });
+      document.getElementById('signUpButton').addEventListener('click', () => {
+        alert("Sign Up feature not implemented yet.");
+      });
+      
+      // Connect Wallet functionality (using Phantom Wallet API)
+      document.getElementById('connectWalletButton').addEventListener('click', async () => {
+        if (window.solana && window.solana.isPhantom) {
+          try {
+            const resp = await window.solana.connect();
+            alert("Connected with wallet: " + resp.publicKey.toString());
+            loginModal.style.display = 'none';
+          } catch (err) {
+            console.error(err);
+            alert("Failed to connect wallet.");
+          }
+        } else {
+          alert("Phantom wallet not found. Please install it.");
+        }
       });
       
       // PLAY/PAUSE Toggle for Desktop Play Bar
@@ -955,11 +879,11 @@
       chartClose.addEventListener('click', () => { chartModal.style.display = 'none'; });
       
       // --- Attach Event Listeners to Explore Cards ---
-      document.querySelectorAll('.card').forEach(card => {
+      document.querySelectorAll('.explore-grid .card').forEach(card => {
         card.addEventListener('click', () => {
           const song = card.getAttribute('data-song');
           const marketCap = parseFloat(card.getAttribute('data-marketcap'));
-          const basePrice = marketCap / 1e14;
+          const basePrice = marketCap / 1e9;
           chartTitle.textContent = song + ' Token Price Chart';
           chartModal.style.display = 'block';
           const dummyData = generateDummyData(basePrice);
@@ -972,6 +896,16 @@
                        plugins: { tooltip: { callbacks: { label: context => '$' + parseFloat(context.parsed.y.toFixed(8)).toString() } } } }
           });
         });
+      });
+      
+      // Compute and update token price for each explore card based on market cap
+      document.querySelectorAll('.explore-grid .card').forEach(card => {
+        let mc = parseFloat(card.getAttribute('data-marketcap'));
+        let price = (mc / 1e9).toFixed(2);
+        let priceEl = card.querySelector('.price');
+        if(priceEl) {
+          priceEl.textContent = '$' + price;
+        }
       });
       
       // --- Recommended Seating Popup ---
