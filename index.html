@@ -62,8 +62,26 @@
     #explore { padding-top: 20px; }
     .explore-header h1 { font-size: 32px; font-weight: 600; margin-bottom: 10px; text-align: center; }
     .explore-header p { font-size: 16px; color: #555; text-align: center; margin-bottom: 20px; }
-    .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    
+    /* Container for the two song categories */
+    .songs-categories {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    /* On desktop, category headings are left aligned */
+    .songs-categories .category h2 {
+      margin-bottom: 10px;
+      text-align: left;
+      padding-left: 10px;
+    }
+    
     /* Explore Card Layout */
+    .explore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
     .card {
       background-color: #fff;
       border-radius: 12px;
@@ -91,13 +109,15 @@
       border-radius: 12px;
       box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
-    .recommended h2 { font-size: 22px; margin-bottom: 10px; }
+    /* Recommended heading remains left aligned */
+    .recommended h2 { font-size: 22px; margin-bottom: 10px; text-align: left; padding-left: 10px; }
     .recommendation-card { cursor: pointer; }
     .recommendation-card h3 {
       font-size: 20px;
       margin-bottom: 5px;
       position: relative;
     }
+    .recommendation-card p { margin-bottom: 20px; }
     .ticket-price-label {
       background-color: #1DA1F2;
       color: #fff;
@@ -208,7 +228,6 @@
       cursor: pointer;
       box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
-    /* .event-item .event-info already has relative positioning */
     .event-details { max-width: 600px; margin: 0 auto; display: none; }
     .theater { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 10px; }
     .seat {
@@ -293,21 +312,9 @@
     #sellTicketModal .modal-content { max-width: 400px; }
     #playlistModal .modal-content { max-width: 400px; }
 
-    /* Stage row for events page (if needed, keep original styling) */
-    .stage {
-      width: 100%;
-      text-align: center;
-      padding: 10px 15px 15px 15px;
-      background-color: #eee;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-    /* New rule for the Explore page recommended seating stage:
-       This will reduce the overall height while adding a little space above the text */
+    /* Stage row for Explore page recommended seating: reduce vertical padding */
     #recommendedSeating .stage {
-      padding: 5px 15px; /* Reduced vertical padding */
+      padding: 5px 15px;
     }
 
     /* Hide mobile-only elements */
@@ -341,11 +348,12 @@
         box-shadow: 0 0 8px rgba(0,0,0,0.15);
         z-index: 1100;
       }
+      /* Bigger sandwich icon on mobile */
       .mobile-nav-toggle {
-        font-size: 32px;
-        width: 32px;
-        height: 32px;
-        line-height: 32px;
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
         cursor: pointer;
       }
       .mobile-profile {
@@ -421,6 +429,15 @@
         padding: 5px;
         font-size: 12px;
       }
+      /* Force song categories to stack vertically on mobile */
+      .songs-categories {
+        flex-direction: column;
+      }
+      /* Center Top Songs and Newest Songs headings on mobile */
+      .songs-categories .category h2 {
+        text-align: center;
+        padding-left: 0;
+      }
       .mobile-header,
       .mobile-play-bar { display: flex; }
     }
@@ -480,82 +497,100 @@
           <h1>Explore New Music</h1>
           <p>Discover emerging tracks and artists ranked by their market cap and trading volume.</p>
         </header>
-        <section class="explore-grid">
-          <!-- Explore Song Cards -->
-          <div class="card" data-song="Song 1" data-marketcap="1200000000">
-            <div class="card-content">
-              <div class="row1">
-                <div class="song-artist">Song 1 - Artist 1</div>
-                <div class="price"></div>
+        <!-- Songs Categories Container -->
+        <div class="songs-categories">
+          <!-- Top Songs Category -->
+          <div class="category">
+            <h2>Top Songs</h2>
+            <div class="explore-grid">
+              <!-- Card for Song 1 -->
+              <div class="card" data-song="Song 1" data-marketcap="1200000000">
+                <div class="card-content">
+                  <div class="row1">
+                    <div class="song-artist">Song 1 - Artist 1</div>
+                    <div class="price"></div>
+                  </div>
+                  <div class="row2">
+                    <div class="market-cap">Market Cap: $1.2B</div>
+                    <div class="volume">Trading Volume: $150M</div>
+                  </div>
+                </div>
               </div>
-              <div class="row2">
-                <div class="market-cap">Market Cap: $1.2B</div>
-                <div class="volume">Trading Volume: $150M</div>
+              <!-- Card for Song 2 -->
+              <div class="card" data-song="Song 2" data-marketcap="900000000">
+                <div class="card-content">
+                  <div class="row1">
+                    <div class="song-artist">Song 2 - Artist 2</div>
+                    <div class="price"></div>
+                  </div>
+                  <div class="row2">
+                    <div class="market-cap">Market Cap: $900M</div>
+                    <div class="volume">Trading Volume: $120M</div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="card" data-song="Song 2" data-marketcap="900000000">
-            <div class="card-content">
-              <div class="row1">
-                <div class="song-artist">Song 2 - Artist 2</div>
-                <div class="price"></div>
-              </div>
-              <div class="row2">
-                <div class="market-cap">Market Cap: $900M</div>
-                <div class="volume">Trading Volume: $120M</div>
-              </div>
-            </div>
-          </div>
-          <div class="card" data-song="Song 3" data-marketcap="750000000">
-            <div class="card-content">
-              <div class="row1">
-                <div class="song-artist">Song 3 - Artist 3</div>
-                <div class="price"></div>
-              </div>
-              <div class="row2">
-                <div class="market-cap">Market Cap: $750M</div>
-                <div class="volume">Trading Volume: $95M</div>
-              </div>
-            </div>
-          </div>
-          <div class="card" data-song="Song 4" data-marketcap="600000000">
-            <div class="card-content">
-              <div class="row1">
-                <div class="song-artist">Song 4 - Artist 4</div>
-                <div class="price"></div>
-              </div>
-              <div class="row2">
-                <div class="market-cap">Market Cap: $600M</div>
-                <div class="volume">Trading Volume: $80M</div>
+              <!-- Card for Song 3 -->
+              <div class="card" data-song="Song 3" data-marketcap="750000000">
+                <div class="card-content">
+                  <div class="row1">
+                    <div class="song-artist">Song 3 - Artist 3</div>
+                    <div class="price"></div>
+                  </div>
+                  <div class="row2">
+                    <div class="market-cap">Market Cap: $750M</div>
+                    <div class="volume">Trading Volume: $95M</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="card" data-song="Song 5" data-marketcap="450000000">
-            <div class="card-content">
-              <div class="row1">
-                <div class="song-artist">Song 5 - Artist 5</div>
-                <div class="price"></div>
+          <!-- Newest Songs Category -->
+          <div class="category">
+            <h2>Newest Songs</h2>
+            <div class="explore-grid">
+              <!-- Card for Song 4 with low values -->
+              <div class="card" data-song="Song 4" data-marketcap="10000">
+                <div class="card-content">
+                  <div class="row1">
+                    <div class="song-artist">Song 4 - Artist 4</div>
+                    <div class="price"></div>
+                  </div>
+                  <div class="row2">
+                    <div class="market-cap">Market Cap: $10K</div>
+                    <div class="volume">Trading Volume: $5K</div>
+                  </div>
+                </div>
               </div>
-              <div class="row2">
-                <div class="market-cap">Market Cap: $450M</div>
-                <div class="volume">Trading Volume: $65M</div>
+              <!-- Card for Song 5 -->
+              <div class="card" data-song="Song 5" data-marketcap="9000">
+                <div class="card-content">
+                  <div class="row1">
+                    <div class="song-artist">Song 5 - Artist 5</div>
+                    <div class="price"></div>
+                  </div>
+                  <div class="row2">
+                    <div class="market-cap">Market Cap: $9K</div>
+                    <div class="volume">Trading Volume: $4.5K</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Card for Song 6 -->
+              <div class="card" data-song="Song 6" data-marketcap="8000">
+                <div class="card-content">
+                  <div class="row1">
+                    <div class="song-artist">Song 6 - Artist 6</div>
+                    <div class="price"></div>
+                  </div>
+                  <div class="row2">
+                    <div class="market-cap">Market Cap: $8K</div>
+                    <div class="volume">Trading Volume: $4K</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="card" data-song="Song 6" data-marketcap="300000000">
-            <div class="card-content">
-              <div class="row1">
-                <div class="song-artist">Song 6 - Artist 6</div>
-                <div class="price"></div>
-              </div>
-              <div class="row2">
-                <div class="market-cap">Market Cap: $300M</div>
-                <div class="volume">Trading Volume: $50M</div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <!-- Recommended For You Section with Inline Seating Popup -->
+        </div>
+        <!-- Recommended For You Section (separate container) -->
         <div class="recommended">
           <h2>Recommended For You</h2>
           <div class="recommendation-card" id="recommendationCard">
@@ -567,7 +602,6 @@
           </div>
           <!-- Inline Seating Popup -->
           <div id="recommendedSeating" style="display:none;">
-            <!-- The stage element on Explore page now has reduced padding -->
             <div class="stage">Stage</div>
             <div class="theater">
               <!-- Row A -->
@@ -894,11 +928,11 @@
     </div>
   </div>
   
-  <!-- Login Modal -->
+  <!-- Login Modal (Now labeled "Account") -->
   <div id="loginModal" class="modal">
     <div class="modal-content">
       <span class="close" id="loginModalClose">&times;</span>
-      <h2 style="text-align: center;">Login</h2>
+      <h2 style="text-align: center;">Account</h2>
       <div style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
         <button id="loginButton" style="margin: 10px; padding: 10px 20px; width: 80%;">Login</button>
         <button id="signUpButton" style="margin: 10px; padding: 10px 20px; width: 80%;">Sign Up</button>
@@ -1062,10 +1096,11 @@
           });
         });
         let mc = parseFloat(card.getAttribute('data-marketcap'));
-        let price = (mc / 1e9).toFixed(2);
+        let computedPrice = mc / 1e9;
         let priceEl = card.querySelector('.price');
+        let priceText = (computedPrice < 0.01) ? "<$0.01" : "$" + computedPrice.toFixed(2);
         if(priceEl) {
-          priceEl.textContent = '$' + price;
+          priceEl.textContent = priceText;
         }
       });
       
