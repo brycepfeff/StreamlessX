@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Streamless - Explore</title>
-  <!-- Favicon: using a relative path -->
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="Favicon.svg">
   <!-- Import Manrope font -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" rel="stylesheet">
@@ -13,25 +13,32 @@
   <style>
     /* Global Reset */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: #e6e6e6; font-family: 'Manrope', sans-serif; color: #000; display: flex; min-height: 100vh; }
+    body { background-color: #ffffff; font-family: 'Manrope', sans-serif; color: #000; display: flex; min-height: 100vh; }
     .container { display: flex; width: 100%; }
-    /* Sidebar */
+
+    /* Desktop Styles (unchanged layout) */
     .sidebar {
-      width: 240px; background-color: #fff; padding: 20px;
-      display: flex; flex-direction: column; box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+      width: 240px;
+      background-color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
       position: fixed; top: 0; bottom: 0; left: 0;
     }
     .nav-links li a { padding-left: 10px; }
-    .logo { width: 200px; margin-bottom: 40px; cursor: pointer; }
+    .logo { width: 180px; margin-bottom: 40px; cursor: pointer; }
     .nav-links { list-style: none; flex-grow: 1; }
     .nav-links li { margin-bottom: 20px; }
     .nav-links li a { text-decoration: none; color: #000; font-weight: 500; font-size: 16px; cursor: pointer; }
-    /* Main content */
     .main { margin-left: 240px; width: calc(100% - 240px); display: flex; flex-direction: column; min-height: 100vh; }
-    /* Top Player Bar */
     .top-player {
-      display: flex; align-items: center; justify-content: space-between;
-      background-color: #fff; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fff;
+      padding: 15px 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
       min-height: 60px;
     }
     .player-info { flex: 1; }
@@ -43,88 +50,176 @@
     .play-controls button { font-size: 24px; margin: 0 10px; min-width: 40px; }
     .account-info button { font-size: 16px; }
     .account-info img { border-radius: 50%; width: 32px; height: 32px; vertical-align: middle; margin-right: 8px; }
-    /* Content Sections (unique IDs) */
     .content-section { padding: 20px; flex-grow: 1; overflow-y: auto; display: none; }
     .content-section.active { display: block; }
-    /* Explore Section */
     #explore { padding-top: 20px; }
     .explore-header h1 { font-size: 32px; font-weight: 600; margin-bottom: 10px; text-align: center; }
     .explore-header p { font-size: 16px; color: #555; text-align: center; margin-bottom: 20px; }
     .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .card {
-      background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: flex; flex-direction: column; padding: 15px; cursor: pointer;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      cursor: pointer;
     }
     .card-content h2 { margin-bottom: 10px; font-size: 20px; font-weight: 600; }
     .card-content p { font-size: 14px; color: #555; margin: 5px 0; }
-    .stats { margin-top: auto; border-top: 1px solid #eee; padding-top: 10px; font-size: 13px; color: #333; }
+    .stats { margin-top: auto; border-top: 2px solid #f7f7f7; padding-top: 10px; font-size: 13px; color: #333; }
     .stats span { display: block; margin-bottom: 5px; }
-    /* Recommended Section */
-    .recommended { max-width: 600px; margin: 40px auto 0; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .recommended {
+      max-width: 600px;
+      margin: 40px auto 0;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
     .recommended h2 { font-size: 22px; margin-bottom: 10px; }
     .recommendation-card { cursor: pointer; }
-    .recommendation-card h3 { font-size: 20px; margin-bottom: 5px; position: relative; }
-    .recommendation-card h3 .ticket-price-label {
-      background-color: #1DA1F2; color: #fff; padding: 4px 8px; border-radius: 8px; font-size: 14px;
-      position: absolute; right: 0; top: 0;
+    .recommendation-card h3 {
+      font-size: 20px;
+      margin-bottom: 5px;
+      position: relative;
     }
-    /* Library Section */
+    .ticket-price-label {
+      background-color: #1DA1F2;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 14px;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
     #library h1 { text-align: center; margin-bottom: 20px; }
-    .library-section { max-width: 600px; margin: 0 auto 20px; background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .library-section h2 { font-size: 20px; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; text-align: center; }
+    .library-section {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
+    .library-section h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #f7f7f7;
+      padding-bottom: 5px;
+      text-align: center;
+    }
     .library-section ul { list-style: none; padding: 0; }
-    .library-section li { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
+    .library-section li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 2px solid #f7f7f7;
+      cursor: pointer;
+    }
     .library-section li:last-child { border-bottom: none; }
     .item-name { flex: 2; }
     .item-price { flex: 1; text-align: right; }
-    #createPlaylistBtn { display: block; margin: 10px auto; padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; background-color: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    /* Portfolio Section */
+    #createPlaylistBtn {
+      display: block;
+      margin: 10px auto;
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      background-color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
     #portfolio h1 { text-align: center; margin-bottom: 20px; }
     .portfolio-value { text-align: center; margin-bottom: 30px; }
     .portfolio-value h2 { font-size: 32px; margin: 10px 0; color: #000; }
-    .portfolio-section { max-width: 600px; margin: 0 auto 20px; background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .portfolio-section h3 { font-size: 20px; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; text-align: center; }
+    .portfolio-section {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
+    .portfolio-section h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #f7f7f7;
+      padding-bottom: 5px;
+      text-align: center;
+    }
     .portfolio-section ul { list-style: none; padding: 0; }
-    .portfolio-section li { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
+    .portfolio-section li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 2px solid #f7f7f7;
+      cursor: pointer;
+    }
     .portfolio-section li:last-child { border-bottom: none; }
     .item-actions { flex: 1; text-align: center; }
-    .item-actions button { margin: 0 2px; padding: 4px 8px; background-color: #1DA1F2; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; width: 60px; text-align: center; }
-    /* Events Section */
+    .item-actions button {
+      margin: 0 2px;
+      padding: 4px 8px;
+      background-color: #1DA1F2;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      width: 60px;
+      text-align: center;
+    }
     #events h1 { text-align: center; margin-bottom: 10px; }
     .event-list { max-width: 600px; margin: 0 auto 20px; }
     .event-list ul { list-style: none; padding: 0; margin: 0; }
     .event-item {
-      display: flex; justify-content: space-between; align-items: center;
-      background-color: #fff; padding: 10px 15px; margin-bottom: 10px;
-      border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
     .event-item .event-info { display: flex; justify-content: space-between; width: 100%; }
-    .event-seats-info { background-color: #1DA1F2; color: #fff; padding: 4px 8px; border-radius: 8px; font-size: 14px; }
+    /* The event seats info uses .ticket-price-label */
     .event-details { max-width: 600px; margin: 0 auto; display: none; }
-    /* Theater Seats in Events */
     .theater { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 10px; }
-    .seat { background-color: #4CAF50; color: #fff; padding: 10px; text-align: center; cursor: pointer; border-radius: 4px; user-select: none; }
+    .seat {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 4px;
+      user-select: none;
+    }
     .seat.unavailable { background-color: #ccc; cursor: not-allowed; }
     .seat.selected { background-color: #2196F3; }
     #totalPrice { font-size: 18px; margin-right: 10px; }
-    .checkout-btn { padding: 10px 20px; font-size: 16px; border: none; border-radius: 20px; background-color: #000; color: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .checkout-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 20px;
+      background-color: #000;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
     .checkout-btn:hover { background-color: #333; }
-    /* Venue Creator Modal – unique layout */
     #venueCreatorModal .modal-content { max-width: 800px; }
     #venueCreatorContent { margin-bottom: 20px; }
     #venueCreatorContent label { margin-right: 5px; font-weight: 500; }
     #venueCreatorContent input { margin-right: 10px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; }
-    /* Row 1: Grid Rows & Columns, Create Grid and Start Over */
-    #venueCreatorContent > div:first-child {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    /* Row 2: GA Limit and Mint Price */
-    #venueCreatorContent > div:nth-child(2) {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    /* Row 3: Toolbar */
+    #venueCreatorContent > div:first-child { text-align: center; margin-bottom: 10px; }
+    #venueCreatorContent > div:nth-child(2) { text-align: center; margin-bottom: 10px; }
     #toolbar { text-align: center; margin-bottom:10px; }
     #toolbar button {
       margin-right: 5px; padding: 5px 10px; border: none;
@@ -140,31 +235,185 @@
     }
     .venue-buttons { text-align: center; margin-top: 10px; }
     .venue-buttons button { width: 30%; padding: 10px; margin: 0 2%; border-radius: 5px; }
-    /* Modal Styles */
-    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }
-    .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 8px; max-width: 600px; position: relative; }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 600px;
+      position: relative;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
     .close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
-    /* Sell Ticket Modal */
     #sellTicketModal .modal-content { max-width: 400px; }
-    /* Playlist Modal */
     #playlistModal .modal-content { max-width: 400px; }
+
+    /* Global Stage and Checkout Summary Styles */
+    .stage {
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      background-color: #eee;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .checkout-summary {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .checkout-summary span, .checkout-summary button {
+      display: inline-block;
+      margin: 0 10px;
+    }
+
+    /* Hide mobile-only elements by default */
+    .mobile-header,
+    .mobile-nav,
+    .mobile-play-bar {
+      display: none;
+    }
+
+    /* Mobile Only Styles */
     @media (max-width: 768px) {
-      .sidebar { position: relative; width: 100%; height: auto; flex-direction: row; align-items: center; justify-content: space-between; padding: 10px 20px; box-shadow: none; }
-      .sidebar .logo { margin-bottom: 0; width: 150px; }
-      .nav-links { display: flex; gap: 15px; }
-      .main { margin-left: 0; width: 100%; }
-      .top-player { flex-direction: column; align-items: center; }
-      .play-controls { margin: 10px 0; }
-      .account-info { text-align: center; }
+      /* Hide desktop sidebar and top-player on mobile */
+      .sidebar,
+      .top-player { display: none; }
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding-top: 60px; /* space for mobile header */
+        padding-bottom: 70px; /* space for mobile play bar */
+      }
+      /* Mobile Header with centered content and hamburger on left */
+      .mobile-header {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-color: #fff;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 8px rgba(0,0,0,0.15);
+        z-index: 1100;
+      }
+      .mobile-header .mobile-logo {
+        width: 150px;
+        height: 40px;
+        object-fit: contain;
+        cursor: pointer;
+      }
+      .mobile-header .mobile-nav-toggle {
+        position: absolute;
+        left: 20px;
+        font-size: 24px;
+        cursor: pointer;
+      }
+      /* Mobile Dropdown Navigation: full-width, centered, with rounded bottom edges */
+      .mobile-nav {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        box-shadow: 0 0 8px rgba(0,0,0,0.15);
+        z-index: 1090;
+        text-align: center;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+      }
+      .mobile-nav ul {
+        list-style: none;
+        padding: 10px;
+        margin: 0;
+      }
+      .mobile-nav ul li {
+        padding: 10px 20px;
+        border-bottom: 2px solid #f7f7f7;
+      }
+      .mobile-nav ul li a {
+        text-decoration: none;
+        color: #000;
+        font-size: 16px;
+      }
+      /* Mobile Play Bar */
+      .mobile-play-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        padding: 10px 20px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.15);
+        z-index: 1000;
+      }
+      .mobile-play-bar .mobile-player-info h3 {
+        font-size: 16px;
+        margin: 0;
+      }
+      .mobile-play-bar .mobile-player-info p {
+        font-size: 12px;
+        margin: 0;
+      }
+      .mobile-play-bar .mobile-play-controls button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+      /* Constrain seat grid on mobile */
+      .theater {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      .seat {
+        padding: 5px;
+        font-size: 12px;
+      }
+      /* Display mobile-only elements */
+      .mobile-header,
+      .mobile-play-bar { display: flex; }
     }
   </style>
 </head>
 <body>
+  <!-- Mobile Header (Visible on Mobile Only) -->
+  <header class="mobile-header">
+    <div class="mobile-nav-toggle">&#9776;</div>
+    <!-- Use Favicon in place of desktop logo -->
+    <img src="Favicon.svg" alt="Favicon" class="mobile-logo">
+  </header>
+  <!-- Mobile Navigation Dropdown -->
+  <nav class="mobile-nav">
+    <ul>
+      <li><a data-page="explore">Explore</a></li>
+      <li><a data-page="library">Library</a></li>
+      <li><a data-page="portfolio">Portfolio</a></li>
+      <li><a data-page="events">Events</a></li>
+    </ul>
+  </nav>
+  
   <div class="container">
-    <!-- Sidebar Navigation -->
+    <!-- Desktop Sidebar Navigation (Unchanged) -->
     <aside class="sidebar">
-      <!-- Logo: using a relative path -->
-      <img src="Streamless.svg" alt="Streamless" class="logo">
+      <img src="Streamless.svg" alt="Streamless" class="logo" onclick="showSection('explore')">
       <ul class="nav-links">
         <li><a data-page="explore">Explore</a></li>
         <li><a data-page="library">Library</a></li>
@@ -172,9 +421,9 @@
         <li><a data-page="events">Events</a></li>
       </ul>
     </aside>
-    <!-- Main Content Area -->
+    <!-- Main Content Area (Desktop remains unchanged) -->
     <div class="main">
-      <!-- Top Player Bar -->
+      <!-- Desktop Top Player Bar (Unchanged) -->
       <header class="top-player">
         <div class="player-info">
           <div class="player-details">
@@ -332,8 +581,8 @@
               <div class="seat available" data-seat="E10" data-price="50">E10</div>
             </div>
             <div class="checkout-summary">
-              <span id="recommendedTotalPrice">Total: $0</span>
-              <button class="checkout-btn" id="recommendedCheckoutBtn">Checkout ($0)</button>
+              <span id="totalPrice">Total: $0</span>
+              <button class="checkout-btn" id="checkoutBtn">Checkout ($0)</button>
             </div>
           </div>
         </div>
@@ -425,7 +674,7 @@
       <div id="events" class="content-section">
         <h1>Events</h1>
         <div class="create-event-container" style="max-width:600px; margin:0 auto 20px; text-align:center;">
-          <button id="createEventBtn" style="padding: 10px 20px; font-size: 16px; border: none; border-radius: 20px; background-color: #000; color: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <button id="createEventBtn" style="padding: 10px 20px; font-size: 16px; border: none; border-radius: 20px; background-color: #000; color: #fff; cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.15);">
             Create Event
           </button>
         </div>
@@ -434,7 +683,7 @@
             <li class="event-item" data-event="artistA" style="cursor:pointer;">
               <div class="event-info">
                 <span class="event-title">Artist 1 Live Concert - May 17</span>
-                <span class="event-seats-info">Tickets starting at $50</span>
+                <span class="ticket-price-label">$50+</span>
               </div>
             </li>
           </ul>
@@ -507,7 +756,7 @@
           <h2 id="playlistModalTitle">Playlist 1</h2>
           <div id="playlistContent">
             <ul style="padding:10px;">
-              <li style="padding:10px; border-bottom:1px solid #ccc;">Song 1 - Artist 1</li>
+              <li style="padding:10px; border-bottom:2px solid #f7f7f7;">Song 1 - Artist 1</li>
               <li style="padding:10px;">Song 2 - Artist 2</li>
             </ul>
           </div>
@@ -590,28 +839,78 @@
     </div>
   </div>
   
+  <!-- Mobile Play Bar (Visible on Mobile Only) -->
+  <div class="mobile-play-bar">
+    <div class="mobile-player-info">
+      <h3>Song 1</h3>
+      <p>Artist 1</p>
+    </div>
+    <div class="mobile-play-controls">
+      <button id="prevBtnMobile">&#9198;</button>
+      <button id="playBtnMobile">&#9654;</button>
+      <button id="nextBtnMobile">&#9197;</button>
+    </div>
+  </div>
+  
   <script>
-    // Helper: show one section only (using unique IDs)
+    // Helper: show one section only (using unique IDs) and persist active section in localStorage
     function showSection(sectionId) {
       document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(sectionId).classList.add('active');
+      localStorage.setItem('activeSection', sectionId);
     }
     
     document.addEventListener('DOMContentLoaded', function() {
-      // NAVIGATION
+      // On load, check if an active section is saved; if so, display that
+      const savedSection = localStorage.getItem('activeSection');
+      if (savedSection && document.getElementById(savedSection)) {
+        showSection(savedSection);
+      } else {
+        showSection('explore');
+      }
+      
+      // Desktop Navigation
       document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', () => { showSection(link.getAttribute('data-page')); });
       });
       document.querySelector('.logo').addEventListener('click', () => { showSection('explore'); });
       
-      // PLAY/PAUSE Toggle
+      // Mobile Navigation Toggle
+      const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+      mobileNavToggle.addEventListener('click', () => {
+        const mobileNav = document.querySelector('.mobile-nav');
+        mobileNav.style.display = (mobileNav.style.display === 'block') ? 'none' : 'block';
+      });
+      // Mobile Navigation Links
+      document.querySelectorAll('.mobile-nav a').forEach(link => {
+        link.addEventListener('click', () => { 
+          showSection(link.getAttribute('data-page')); 
+          document.querySelector('.mobile-nav').style.display = 'none';
+        });
+      });
+      // Mobile Logo Click: Return to Home Page
+      document.querySelector('.mobile-logo').addEventListener('click', () => {
+        showSection('explore');
+        document.querySelector('.mobile-nav').style.display = 'none';
+      });
+      
+      // PLAY/PAUSE Toggle for Desktop Play Bar
       const playBtn = document.getElementById('playBtn');
       playBtn.addEventListener('click', function(e) {
         this.innerText = (this.innerText.trim() === '▶') ? '⏸' : '▶';
         e.stopPropagation();
       });
       
-      // --- CHART MODAL ---
+      // PLAY/PAUSE Toggle for Mobile Play Bar
+      const playBtnMobile = document.getElementById('playBtnMobile');
+      if(playBtnMobile){
+        playBtnMobile.addEventListener('click', function(e) {
+          this.innerText = (this.innerText.trim() === '▶') ? '⏸' : '▶';
+          e.stopPropagation();
+        });
+      }
+      
+      // --- CHART MODAL FUNCTIONS ---
       const chartModal = document.getElementById('chartModal');
       const chartClose = document.getElementById('chartClose');
       const chartTitle = document.getElementById('chartTitle');
@@ -655,7 +954,7 @@
       }
       chartClose.addEventListener('click', () => { chartModal.style.display = 'none'; });
       
-      // Explore cards: Click to show chart modal
+      // --- Attach Event Listeners to Explore Cards ---
       document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', () => {
           const song = card.getAttribute('data-song');
@@ -675,7 +974,7 @@
         });
       });
       
-      // --- Recommended For You Inline Seating Popup ---
+      // --- Recommended Seating Popup ---
       const recommendationCard = document.getElementById('recommendationCard');
       recommendationCard.addEventListener('click', () => {
         const recPopup = document.getElementById('recommendedSeating');
@@ -689,7 +988,7 @@
         }
       });
       
-      // --- Recommended Seating: Attach seat event listeners for live total update ---
+      // --- Recommended Seating: Update Total ---
       function updateRecommendedTotal() {
           let total = 0;
           document.querySelectorAll('#recommendedSeating .seat.selected').forEach(s => {
@@ -712,7 +1011,7 @@
           });
       });
       
-      // --- Events Section: Toggle event details on event item click ---
+      // --- Events Section ---
       document.querySelectorAll('.event-item').forEach(item => {
         item.addEventListener('click', function() {
           const eventId = item.getAttribute('data-event');
@@ -722,8 +1021,6 @@
           }
         });
       });
-      
-      // --- Events Section: Attach seat event listeners for live total update ---
       function updateEventTotal() {
           let total = 0;
           document.querySelectorAll('#artistADetails .seat.selected').forEach(s => {
@@ -745,8 +1042,6 @@
               updateEventTotal();
           });
       });
-      
-      // --- Checkout Modal for Events ---
       const checkoutBtn = document.getElementById('checkoutBtn');
       const checkoutModal = document.getElementById('checkoutModal');
       const checkoutClose = document.getElementById('checkoutClose');
@@ -776,6 +1071,32 @@
         document.getElementById('checkoutBtn').textContent = "Checkout ($0)";
       });
       
+      // --- Portfolio Section Action Buttons ---
+      const attachActionButtons = (selector, isTicket) => {
+        document.querySelectorAll(selector).forEach(item => {
+          item.querySelector('.view-chart').addEventListener('click', e => {
+            e.stopPropagation();
+            if(isTicket){
+              showPortfolioTicketChart(item);
+            } else {
+              showPortfolioSongChart(item);
+            }
+          });
+          item.querySelector('.sell-item').addEventListener('click', e => {
+            e.stopPropagation();
+            if(isTicket) {
+              document.getElementById('sellTicketModal').style.display = 'block';
+            } else {
+              if(confirm("Do you want to sell this song?")) {
+                alert("Song listed for sale (simulated).");
+              }
+            }
+          });
+        });
+      };
+      attachActionButtons('.portfolio-song', false);
+      attachActionButtons('.portfolio-ticket', true);
+      
       // --- Playlist Modal ---
       const playlistModal = document.getElementById('playlistModal');
       const playlistClose = document.getElementById('playlistClose');
@@ -794,7 +1115,7 @@
       document.querySelector('.playlist-item').addEventListener('click', () => {
         playlistModalTitle.textContent = "Playlist 1";
         playlistContent.innerHTML = `<ul style="padding:10px;">
-          <li style="padding:10px; border-bottom:1px solid #ccc;">Song 1 - Artist 1</li>
+          <li style="padding:10px; border-bottom:2px solid #f7f7f7;">Song 1 - Artist 1</li>
           <li style="padding:10px;">Song 2 - Artist 2</li>
         </ul>`;
         confirmPlaylistBtn.style.display = 'none';
@@ -826,7 +1147,6 @@
       const venueCreatorClose = document.getElementById('venueCreatorClose');
       const cancelVenueBtn = document.getElementById('cancelVenueBtn');
       const resetVenueBtn = document.getElementById('resetVenueBtn');
-      
       createEventBtn.addEventListener('click', () => {
         venueCreatorModal.style.display = 'block';
       });
@@ -921,7 +1241,6 @@
         }
         container.appendChild(table);
       }
-      
     });
   </script>
 </body>
