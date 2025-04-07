@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -68,6 +68,10 @@
       display: flex;
       gap: 20px;
       margin-top: 20px;
+      justify-content: center;
+    }
+    .songs-categories .category {
+      flex: 1;
     }
     /* Center category headings on desktop */
     .songs-categories .category h2 {
@@ -108,7 +112,7 @@
       border-radius: 12px;
       box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
-    /* Center the Recommended For You title and its content on desktop */
+    /* Center the Recommended For You heading and content on desktop */
     .recommended h2 { font-size: 22px; margin-bottom: 10px; text-align: center; }
     .recommendation-card { text-align: center; cursor: pointer; }
     .recommendation-card h3 {
@@ -116,7 +120,8 @@
       margin-bottom: 5px;
       position: relative;
     }
-    .recommendation-card p { margin-bottom: 20px; }
+    /* Removed bio text from the recommended card */
+    /* .recommendation-card p { margin-bottom: 20px; } */
     .ticket-price-label {
       background-color: #1DA1F2;
       color: #fff;
@@ -228,7 +233,22 @@
       box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
     .event-details { max-width: 600px; margin: 0 auto; display: none; }
-    .theater { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 10px; }
+    /* Theater grid for seating charts */
+    .theater { 
+      display: grid; 
+      grid-template-columns: repeat(10, 1fr); 
+      gap: 5px; 
+      margin-bottom: 10px; 
+    }
+    /* Make the stage span the full width of the grid */
+    .theater .stage {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-weight: bold;
+      padding: 5px 0;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+    }
     .seat {
       background-color: #4CAF50;
       color: #fff;
@@ -253,13 +273,6 @@
     }
     .checkout-btn:hover { background-color: #333; }
     /* Recommended Seating uses unique IDs */
-    #recommendedSeating .checkout-summary {
-      text-align: center;
-    }
-    #recommendedSeating .checkout-summary span {
-      display: inline-block;
-      margin: 0 10px;
-    }
     /* Use original IDs for events checkout summary */
     #artistADetails .checkout-summary {
       text-align: center;
@@ -313,9 +326,7 @@
     #playlistModal .modal-content { max-width: 400px; }
 
     /* Stage row for Explore page recommended seating: reduce vertical padding */
-    #recommendedSeating .stage {
-      padding: 5px 15px;
-    }
+    /* (Now handled by .theater .stage) */
 
     /* Hide mobile-only elements */
     .mobile-header,
@@ -388,7 +399,7 @@
         padding: 10px 20px;
         border-bottom: 2px solid #f7f7f7;
       }
-      /* Remove the line (border) under the last item (Events) */
+      /* Remove the bottom border from the last dropdown item */
       .mobile-nav ul li:last-child { border-bottom: none; }
       .mobile-nav ul li a {
         text-decoration: none;
@@ -592,7 +603,7 @@
             </div>
           </div>
         </div>
-        <!-- Recommended For You Section (separate container) -->
+        <!-- Recommended For You Section (separate container, bio removed) -->
         <div class="recommended">
           <h2>Recommended For You</h2>
           <div class="recommendation-card" id="recommendationCard">
@@ -600,12 +611,11 @@
               Artist 1 Live Concert 
               <span class="ticket-price-label">$50+</span>
             </h3>
-            <p>Experience an exclusive live performance by Artist 1.</p>
           </div>
           <!-- Inline Seating Popup -->
           <div id="recommendedSeating" style="display:none;">
-            <div class="stage">Stage</div>
             <div class="theater">
+              <div class="stage">Stage</div>
               <!-- Row A -->
               <div class="seat available" data-seat="A1" data-price="90">A1</div>
               <div class="seat available" data-seat="A2" data-price="90">A2</div>
@@ -663,8 +673,8 @@
               <div class="seat available" data-seat="E10" data-price="50">E10</div>
             </div>
             <div class="checkout-summary">
-              <span id="totalPrice">Total: $0</span>
-              <button class="checkout-btn" id="checkoutBtn">Checkout ($0)</button>
+              <span id="recommendedTotalPrice">Total: $0</span>
+              <button class="checkout-btn" id="recommendedCheckoutBtn">Checkout ($0)</button>
             </div>
           </div>
         </div>
@@ -771,8 +781,8 @@
           </ul>
         </div>
         <div class="event-details" id="artistADetails" style="display: none;">
-          <div class="stage">Stage</div>
           <div class="theater">
+            <div class="stage">Stage</div>
             <div class="seat available" data-seat="A1" data-price="90">A1</div>
             <div class="seat available" data-seat="A2" data-price="90">A2</div>
             <div class="seat available" data-seat="A3" data-price="90">A3</div>
@@ -851,9 +861,9 @@
         <div class="modal-content">
           <span class="close" id="venueCreatorClose">&times;</span>
           <h2 style="text-align:center;">Venue Creator</h2>
-          <!-- Added instructions for how to use the venue creator -->
+          <!-- Added instructions for venue creator -->
           <p style="text-align: center; font-size: 14px; margin-bottom: 10px;">
-            Set your grid dimensions and use the toolbar to design your venue. Double-click a cell to edit its label and price.
+            Set grid dimensions, then use the toolbar to design your venue. Double-click a cell to edit its label and price.
           </p>
           <div id="venueCreatorContent">
             <div style="text-align: center; margin-bottom: 10px;">
